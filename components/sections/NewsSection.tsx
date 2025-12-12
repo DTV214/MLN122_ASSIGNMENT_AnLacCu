@@ -58,8 +58,8 @@ export function NewsSection() {
             >
               Thư Viện Tư Liệu
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-              Tin Tức & Sự Kiện
+            <h2 className="text-3xl md:text-4xl  font-bold text-foreground">
+              Dẫn chứng nội dung
             </h2>
           </div>
 

@@ -105,7 +105,7 @@ export function SolutionSection() {
 
                 {/* Nội dung */}
                 <div className="relative z-10 mt-4">
-                  <h3 className="text-2xl font-bold font-serif text-foreground mb-4 group-hover:text-primary transition-colors">
+                  <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                     {sol.title}
                   </h3>
 

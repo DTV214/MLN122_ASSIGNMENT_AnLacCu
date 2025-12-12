@@ -16,50 +16,42 @@ export function Navbar() {
   return (
     <div className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
       <div className="flex h-16 items-center px-4 md:px-10 max-w-7xl mx-auto justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link
+          href="/"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
           <Home className="h-6 w-6 text-primary" />
           <span className="text-xl font-bold tracking-tighter">
             MLN122 Project
           </span>
-        </div>
+        </Link>
 
-        {/* Menu Bar */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/#thuc-trang"
-                  className={navigationMenuTriggerStyle()}
-                >
+              <Link href="/#thuc-trang" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Thực Trạng
-                </Link>
-              </NavigationMenuLink>
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
-
             <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link href="/#ly-luan" className={navigationMenuTriggerStyle()}>
+              <Link href="/#ly-luan" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Lý Luận
-                </Link>
-              </NavigationMenuLink>
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
-
             <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/#giai-phap"
-                  className={navigationMenuTriggerStyle()}
-                >
+              <Link href="/#giai-phap" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Giải Pháp
-                </Link>
-              </NavigationMenuLink>
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Board Game Button */}
         <div className="flex items-center gap-4">
           <Link href="/board-game">
             <Button

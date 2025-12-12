@@ -61,7 +61,7 @@ export function HeroSection() {
                     <span className="inline-block px-3 py-1 mb-2 text-xs font-bold uppercase tracking-wider bg-destructive rounded-sm text-destructive-foreground">
                       {item.source}
                     </span>
-                    <h2 className="text-2xl md:text-4xl font-serif font-bold leading-tight">
+                    <h2 className="text-2xl md:text-4xl  font-bold leading-tight">
                       {item.title}
                     </h2>
                     <p className="text-sm md:text-base opacity-80 mt-2 font-mono">

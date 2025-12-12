@@ -1,45 +1,57 @@
 "use client";
 
-import { Navbar } from "@/components/layout/Navbar"; // Nhớ tạo file này
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { RealitySection } from "@/components/sections/RealitySection";
 import { TheorySection } from "@/components/sections/TheorySection";
 import { SolutionSection } from "@/components/sections/SolutionSection";
-import { Footer } from "@/components/layout/Footer"; // Nhớ tạo file này
 import { NewsSection } from "@/components/sections/NewsSection";
+// Import các component mới
+import { ProvocationSection } from "@/components/sections/ProvocationSection";
+import { IdealSection } from "@/components/sections/IdealSection";
+import { FAQSection } from "@/components/sections/FAQSection";
 import { BackToTop } from "@/components/ui/back-to-top";
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full relative">
-      {/* Navbar cố định phía trên */}
+    <main className="min-h-screen bg-background font-sans text-foreground overflow-x-hidden">
       <Navbar />
 
-      {/* 1. Banner & Giới thiệu chung */}
+      {/* 1. MỞ ĐẦU: Bối cảnh chung */}
       <div id="hero">
         <HeroSection />
       </div>
 
-      {/* 2. Thực trạng (Zigzag Layout) */}
-      <div id="thuc-trang" className="scroll-mt-20">
+      {/* 2. ĐẶT VẤN ĐỀ: Câu hỏi lớn (Điểm nhấn mới) */}
+      <ProvocationSection />
+
+      {/* 3. THỰC TRẠNG: Bằng chứng thực tế (Biểu đồ & Ảnh) */}
+      <div id="thuc-trang">
         <RealitySection />
       </div>
 
-      {/* 3. Lý luận (So sánh 2 cột) */}
-      <div id="ly-luan" className="scroll-mt-20">
+      {/* 4. TIN TỨC: Tư liệu báo chí bổ trợ */}
+      <div id="tin-tuc">
+        <NewsSection />
+      </div>
+
+      {/* 5. LÝ LUẬN: Gốc rễ vấn đề (Tư bản vs XHCN) */}
+      <div id="ly-luan">
         <TheorySection />
       </div>
 
-      {/* 4. Giải pháp (Tabs tương tác) */}
-      <div id="giai-phap" className="scroll-mt-20">
+      {/* 6. LÝ TƯỞNG: Kim chỉ nam (Điểm nhấn mới) */}
+      <IdealSection />
+
+      {/* 7. GIẢI PHÁP: Công cụ vĩ mô */}
+      <div id="giai-phap">
         <SolutionSection />
       </div>
-      {/* 5. Tin tức & Cập nhật
-      <div id="tin-tuc" className="scroll-mt-20">
-        <NewsSection />
-      </div> */}
 
-      {/* Footer */}
+      {/* 8. KẾT: Hỏi đáp mở rộng (Điểm nhấn mới) */}
+      <FAQSection />
+
       <Footer />
       <BackToTop />
     </main>

@@ -20,8 +20,9 @@ import {
   ArrowRight,
   AlertCircle,
   Calculator,
-  Minus,
   Plus,
+  Minus,
+  HelpCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -34,211 +35,362 @@ type GameEvent = {
   type: "market_up" | "market_down" | "neutral" | "policy";
 };
 
+type Scenario = {
+  id: number;
+  question: string;
+  options: {
+    text: string;
+    outcomeText: string;
+    moneyChange: number; // Triệu đồng
+    happinessChange: number;
+  }[];
+};
+
 type TurnDetails = {
   income: number;
   safeProfit: number;
   riskProfit: number;
   interestCost: number;
-  eventImpact: number;
+  scenarioImpact: number;
   totalChange: number;
   explanation: string;
+  scenarioText?: string;
 };
 
-// --- DỮ LIỆU SỰ KIỆN ---
+type PendingTurnData = {
+  baseIncome: number;
+  safeProfit: number;
+  riskProfit: number;
+  interestCost: number;
+  explanationText: string;
+  houseChangeRate: number;
+  randomEvent: GameEvent;
+  loanAmount: number;
+};
+
+// --- DỮ LIỆU SỰ KIỆN (EVENTS - MACRO) ---
+// Mở rộng lên 15 sự kiện để tăng tính ngẫu nhiên
 const EVENTS: GameEvent[] = [
+  // Nhóm Bình ổn & Tốt
+  { id: 1, yearText: "Kinh tế Vĩ mô Ổn định", description: "Lạm phát được kiểm soát, thị trường phát triển bền vững.", type: "neutral" },
+  { id: 2, yearText: "Tăng Trưởng GDP Vượt Bậc", description: "Thu nhập bình quân đầu người tăng, cơ hội việc làm rộng mở.", type: "market_up" },
+  { id: 3, yearText: "Vốn FDI Đổ Bộ", description: "Các tập đoàn nước ngoài đầu tư mạnh, BĐS khu công nghiệp hưởng lợi.", type: "market_up" },
+  { id: 4, yearText: "Hạ Tầng Hoàn Thiện", description: "Tuyến Metro và Vành đai thông xe, giá nhà đất khu vực ven tăng mạnh.", type: "market_up" },
+  
+  // Nhóm Rủi ro & Xấu
+  { id: 5, yearText: "Lạm Phát Phi Mã", description: "Giá xăng tăng, bát phở tăng giá. Tiền mặt mất giá trị nhanh chóng.", type: "market_down" },
+  { id: 6, yearText: "Bong Bóng Trái Phiếu", description: "Nhiều doanh nghiệp chậm trả nợ, niềm tin thị trường sụp đổ.", type: "market_down" },
+  { id: 7, yearText: "Dịch Bệnh Bùng Phát", description: "Giãn cách xã hội, hoạt động kinh doanh đình trệ.", type: "market_down" },
+  { id: 8, yearText: "Chiến Tranh Thương Mại", description: "Chuỗi cung ứng đứt gãy, nguyên vật liệu xây dựng tăng giá.", type: "market_down" },
+  { id: 9, yearText: "Siết Chặt Tín Dụng", description: "Ngân hàng hết 'room' tín dụng, lãi suất vay mua nhà tăng vọt.", type: "market_down" },
+  
+  // Nhóm Chính sách (Policy) - Giáo dục MLN122
+  { id: 10, yearText: "Gói 120.000 Tỷ", description: "Nhà nước tung gói tín dụng ưu đãi cho NOXH, tháo gỡ khó khăn BĐS.", type: "policy" },
+  { id: 11, yearText: "Luật Đất Đai (Sửa đổi)", description: "Bỏ khung giá đất, đền bù sát giá thị trường. Giá nhà thiết lập mặt bằng mới.", type: "policy" },
+  { id: 12, yearText: "Đánh Thuế BĐS Thứ 2", description: "Dự thảo đánh thuế người nhiều nhà đất. Đầu cơ bị hạn chế.", type: "policy" },
+  { id: 13, yearText: "Cải Cách Tiền Lương", description: "Lương cơ sở tăng, sức mua của người dân được cải thiện.", type: "neutral" },
+  { id: 14, yearText: "Chống Tham Nhũng", description: "Làm trong sạch bộ máy, môi trường kinh doanh minh bạch hơn.", type: "neutral" },
+  { id: 15, yearText: "Sốt Đất Ảo", description: "Cò đất thổi giá vùng ven, giá tăng nóng nhưng thanh khoản kém.", type: "market_up" }, // Cẩn thận bẫy
+];
+
+// --- DỮ LIỆU TÌNH HUỐNG (SCENARIOS - MICRO) ---
+// Mở rộng lên 15 tình huống đời thường
+const SCENARIOS: Scenario[] = [
+  // Nhóm 1: Sự nghiệp & Học tập
   {
     id: 1,
-    yearText: "Kinh tế Bình ổn",
-    description: "Thị trường ổn định, lãi suất ngân hàng giữ mức trung bình.",
-    type: "neutral",
+    question: "Sếp đề nghị bạn đi công tác vùng sâu vùng xa 1 năm để thăng chức. Đi hay ở?",
+    options: [
+      { text: "Đi ngay! (Cày tiền)", outcomeText: "Vất vả, xa gia đình nhưng được thưởng lớn và tăng lương.", moneyChange: 80, happinessChange: -15 },
+      { text: "Ở lại, cần work-life balance.", outcomeText: "Bạn sống vui vẻ, nhàn hạ nhưng bỏ lỡ cơ hội tăng thu nhập.", moneyChange: 0, happinessChange: 10 },
+    ]
   },
   {
     id: 2,
-    yearText: "Sốt Đất Cục Bộ",
-    description: "Giá đất tăng, đầu tư mạo hiểm sinh lời cao.",
-    type: "market_up",
+    question: "Có khóa học 'Làm chủ tài chính & BĐS' giá 30 triệu.",
+    options: [
+      { text: "Đi học nâng trình (-30tr)", outcomeText: "Kiến thức giúp bạn tránh được một cú lừa ngoạn mục sau này.", moneyChange: -30, happinessChange: 5 }, 
+      { text: "Tự học trên Youtube", outcomeText: "Tiết kiệm tiền, nhưng kiến thức chắp vá, dễ bị 'lùa gà'.", moneyChange: 0, happinessChange: -2 },
+    ]
   },
+
+  // Nhóm 2: Đầu tư & Rủi ro
   {
     id: 3,
-    yearText: "Lạm Phát Tăng",
-    description: "Chi phí sinh hoạt tăng, giá trị đầu tư giảm sút.",
-    type: "market_down",
+    question: "Thị trường tiền ảo (Crypto) đang 'uptrend', ai cũng khoe lãi. Vào không?",
+    options: [
+      { text: "All-in bắt đáy! (-50tr)", outcomeText: "Thị trường sập! Bạn bị 'chia đôi tài khoản'. Bài học nhớ đời.", moneyChange: -50, happinessChange: -20 },
+      { text: "Thôi, tôi sợ ảo lắm.", outcomeText: "Thị trường sập. Bạn thở phào nhẹ nhõm vì bảo toàn vốn.", moneyChange: 0, happinessChange: 5 },
+    ]
   },
   {
     id: 4,
-    yearText: "Thăng Chức",
-    description: "Thu nhập tăng nhờ năng lực làm việc tốt.",
-    type: "neutral",
+    question: "Bạn thân rủ hùn vốn mở quán Cafe 'Chill'.",
+    options: [
+      { text: "Máu kinh doanh! (-50tr)", outcomeText: "Quán đông khách! Bạn được chia lợi nhuận hàng tháng.", moneyChange: 100, happinessChange: 10 },
+      { text: "Rủi ro lắm, từ chối.", outcomeText: "Bạn giữ tiền an toàn. 6 tháng sau nghe tin quán đóng cửa.", moneyChange: 0, happinessChange: 5 },
+    ]
   },
   {
     id: 5,
-    yearText: "Gói Tín Dụng Ưu Đãi",
-    description: "Lãi suất vay giảm, thị trường BĐS ấm lên.",
-    type: "policy",
+    question: "Cơn sốt 'Lan Đột Biến'. Người ta bảo mua đi bán lại lời gấp 5.",
+    options: [
+      { text: "Thử vận may (-20tr)", outcomeText: "Đó là cú lừa thế kỷ! Cây lan chết, tiền cũng mất.", moneyChange: -20, happinessChange: -15 },
+      { text: "Không tin những thứ vô lý", outcomeText: "Bạn tỉnh táo trước cám dỗ làm giàu nhanh.", moneyChange: 0, happinessChange: 2 },
+    ]
   },
+
+  // Nhóm 3: Đời sống & Tiêu dùng (Flexing)
   {
     id: 6,
-    yearText: "Thị Trường Đóng Băng",
-    description: "Thanh khoản kém, đầu tư dễ bị lỗ.",
-    type: "market_down",
+    question: "Ra mắt iPhone 16 Pro Max. Bạn bè ai cũng có, bạn thì sao?",
+    options: [
+      { text: "Mua trả góp! (-35tr)", outcomeText: "Oai với bạn bè, nhưng còng lưng trả nợ thẻ tín dụng.", moneyChange: -35, happinessChange: 15 },
+      { text: "Dùng điện thoại cũ", outcomeText: "Bị chê là 'tối cổ', nhưng ví tiền được bảo toàn.", moneyChange: 0, happinessChange: -5 },
+    ]
   },
   {
     id: 7,
-    yearText: "Chứng Khoán Bùng Nổ",
-    description: "Dòng tiền đổ vào thị trường, cơ hội nhân vốn.",
-    type: "market_up",
+    question: "Người yêu muốn tổ chức đám cưới linh đình 'như trong phim'.",
+    options: [
+      { text: "Chiều ý người yêu (-150tr)", outcomeText: "Đám cưới thế kỷ, hạnh phúc thăng hoa nhưng 'âm' nặng vào tiền tiết kiệm.", moneyChange: -150, happinessChange: 30 },
+      { text: "Thuyết phục làm đơn giản", outcomeText: "Tiết kiệm được khoản lớn để mua nhà, nhưng bị 'nói mát' vài tháng.", moneyChange: -30, happinessChange: -5 },
+    ]
   },
   {
     id: 8,
-    yearText: "Siết Chặt Tín Dụng",
-    description: "Lãi suất vay tăng cao, khó tiếp cận vốn.",
-    type: "market_down",
+    question: "Áp lực công việc quá lớn, bạn bị Burnout (Kiệt sức).",
+    options: [
+      { text: "Đi du lịch chữa lành (-20tr)", outcomeText: "Chuyến đi giúp bạn hồi phục năng lượng để tiếp tục cày cuốc.", moneyChange: -20, happinessChange: 25 },
+      { text: "Cố chịu đựng", outcomeText: "Bạn tiết kiệm được tiền nhưng phải đi viện vì stress.", moneyChange: -10, happinessChange: -20 },
+    ]
+  },
+  {
+    id: 9,
+    question: "Xe máy cũ hỏng liên tục. Mua xe tay ga xịn hay xe số bình thường?",
+    options: [
+      { text: "Xe tay ga xịn (-60tr)", outcomeText: "Đi êm, dáng đẹp, dễ tán tỉnh người yêu hơn.", moneyChange: -60, happinessChange: 10 },
+      { text: "Xe số bền bỉ (-20tr)", outcomeText: "Xe nồi đồng cối đá, tiết kiệm xăng và tiền.", moneyChange: -20, happinessChange: 0 },
+    ]
+  },
+
+  // Nhóm 4: Gia đình & Xã hội
+  {
+    id: 10,
+    question: "Bố mẹ ở quê muốn sửa lại cái mái nhà bị dột.",
+    options: [
+      { text: "Gửi tiền biếu bố mẹ (-50tr)", outcomeText: "Bố mẹ vui vẻ, gia đình êm ấm. Chữ hiếu làm đầu.", moneyChange: -50, happinessChange: 20 },
+      { text: "Than nghèo kể khổ", outcomeText: "Bố mẹ tự xoay sở, nhưng không khí gia đình trầm lắng.", moneyChange: 0, happinessChange: -15 },
+    ]
+  },
+  {
+    id: 11,
+    question: "Bạn thân mượn 20 triệu 'nóng' để trả nợ, hứa tuần sau trả.",
+    options: [
+      { text: "Cho mượn, bạn bè mà (-20tr)", outcomeText: "Mất cả tiền lẫn bạn. Nó đã 'bùng' và chặn số bạn.", moneyChange: -20, happinessChange: -15 },
+      { text: "Từ chối khéo", outcomeText: "Bạn giữ được tiền, nhưng tình bạn rạn nứt.", moneyChange: 0, happinessChange: -5 },
+    ]
+  },
+  {
+    id: 12,
+    question: "Họp lớp cũ. Mọi người bàn tán về việc mua nhà, mua xe.",
+    options: [
+      { text: "Nổ (Flex) cho oai (-5tr)", outcomeText: "Bao cả lớp bữa nhậu để lấy le. Về nhà ăn mì tôm.", moneyChange: -5, happinessChange: 5 },
+      { text: "Sống thật, đi xe ôm đến", outcomeText: "Bị vài người khinh thường, nhưng bạn không quan tâm.", moneyChange: 0, happinessChange: 0 },
+    ]
+  },
+
+  // Nhóm 5: Sức khỏe & May mắn
+  {
+    id: 13,
+    question: "Bạn bị đau răng dữ dội. Trám răng hay Bọc sứ thẩm mỹ?",
+    options: [
+      { text: "Bọc sứ toàn hàm (-40tr)", outcomeText: "Nụ cười tỏa nắng, tự tin giao tiếp, nhưng đau ví.", moneyChange: -40, happinessChange: 15 },
+      { text: "Chỉ trám chỗ sâu (-2tr)", outcomeText: "Giải quyết cơn đau, thẩm mỹ bình thường.", moneyChange: -2, happinessChange: 0 },
+    ]
+  },
+  {
+    id: 14,
+    question: "Mua vé số Vietlott cầu may?",
+    options: [
+      { text: "Thử vận may (-500k)", outcomeText: "Trúng giải khuyến khích! Đủ tiền ăn sáng.", moneyChange: 1, happinessChange: 2 }, // Hầu như không trúng lớn
+      { text: "Không, tiền mồ hôi nước mắt", outcomeText: "Bạn giữ vững lập trường lao động chân chính.", moneyChange: 0, happinessChange: 0 },
+    ]
+  },
+  {
+    id: 15,
+    question: "Nuôi thú cưng (Chó/Mèo) để bớt cô đơn?",
+    options: [
+      { text: "Nuôi một bé Corgi (-10tr)", outcomeText: "Tốn tiền mua và tiền ăn, nhưng có người đợi cửa khi về.", moneyChange: -15, happinessChange: 20 },
+      { text: "Ở một mình cho khỏe", outcomeText: "Tiết kiệm tiền và thời gian dọn dẹp.", moneyChange: 0, happinessChange: -5 },
+    ]
   },
 ];
 
 export default function BoardGamePage() {
   // --- STATE ---
   const [age, setAge] = useState(22);
-  const [savings, setSavings] = useState(100); // Khởi đầu 100tr cho dễ chơi
+  const [savings, setSavings] = useState(100);
   const [housePrice, setHousePrice] = useState(1500);
   const [happiness, setHappiness] = useState(100);
   const [debt, setDebt] = useState(0);
 
-  // Strategy State
   const [strategy, setStrategy] = useState<"safe" | "invest" | "borrow">(
     "safe"
   );
   const [borrowAmount, setBorrowAmount] = useState([100]);
-  const [investAmount, setInvestAmount] = useState([50]); // Mới: Slider cho đầu tư
+  const [investAmount, setInvestAmount] = useState([50]);
 
   const [gameState, setGameState] = useState<
-    "intro" | "playing" | "won" | "lost"
+    "intro" | "playing" | "scenario" | "summary" | "won" | "lost"
   >("intro");
   const [history, setHistory] = useState<string[]>([]);
 
-  // State mới: Lưu chi tiết công thức tính toán
+  // Lưu kết quả tạm tính trước khi chọn Scenario
+  // Thay thế dòng cũ: const [pendingTurnData, setPendingTurnData] = useState<any>(null);
+  const [pendingTurnData, setPendingTurnData] =
+    useState<PendingTurnData | null>(null);
+  const [currentScenario, setCurrentScenario] = useState<Scenario | null>(null);
   const [turnDetail, setTurnDetail] = useState<TurnDetails | null>(null);
 
-  // --- LOGIC TÍNH TOÁN ---
-  const handleNextTurn = () => {
-    // 1. Check thua
-    if (happiness <= 0 || age >= 60) {
+  // --- LOGIC BƯỚC 1: TÍNH TOÁN TÀI CHÍNH ---
+  const calculateFinancials = () => {
+    // Check thua: Quá 40 tuổi (Khó hơn)
+    if (age >= 40) {
       setGameState("lost");
       return;
     }
 
     const randomEvent = EVENTS[Math.floor(Math.random() * EVENTS.length)];
 
-    // --- CÔNG THỨC TÍNH TOÁN CHI TIẾT ---
+    // Thu nhập cơ bản: 15tr * 12 * 40% dư = 72tr. Tăng theo tuổi.
+    const baseIncome = Math.floor(72 * (1 + (age - 22) * 0.08));
 
-    // A. Thu nhập cơ bản (Lương - Chi tiêu)
-    // Giả sử mỗi năm dư được 40% lương (Lương 15tr -> Dư ~72tr/năm)
-    // Tăng nhẹ theo tuổi tác (kinh nghiệm)
-    const baseIncome = Math.floor(72 * (1 + (age - 22) * 0.05));
-
-    // B. Tính toán Lợi nhuận/Chi phí
-    let safeProfit = 0; // Lãi từ phần tiền gửi ngân hàng
-    let riskProfit = 0; // Lãi/Lỗ từ phần tiền đem đi đầu tư
-    let interestCost = 0; // Lãi phải trả cho nợ
-    const eventImpact = 0; // Tác động trực tiếp từ sự kiện (thưởng/phạt)
+    let safeProfit = 0;
+    let riskProfit = 0;
+    let interestCost = 0;
     let explanationText = "";
 
-    // Lãi suất ngân hàng cơ bản: 6%
-    const SAFE_RATE = 0.06;
-    const BORROW_RATE = 0.12; // 12%
+    const SAFE_RATE = 0.05; // Giảm lãi tiết kiệm xuống 5% (Để khó thắng hơn nếu chỉ tiết kiệm)
+    const BORROW_RATE = 0.12;
 
+    // Logic chiến lược
     if (strategy === "safe") {
-      // Gửi toàn bộ tiết kiệm vào ngân hàng
       safeProfit = Math.floor(savings * SAFE_RATE);
-      explanationText = `Gửi tiết kiệm toàn bộ ${savings.toLocaleString()}tr hưởng lãi 6%.`;
+      explanationText = `Gửi tiết kiệm ${savings.toLocaleString()}tr (Lãi 5%).`;
     } else if (strategy === "invest") {
-      // Đầu tư một phần, phần còn lại gửi ngân hàng
       const actualInvest = Math.min(investAmount[0], savings);
       const remainingSafe = savings - actualInvest;
-
       safeProfit = Math.floor(remainingSafe * SAFE_RATE);
 
-      // Tính lãi đầu tư dựa trên sự kiện
-      let rate = 0;
-      if (randomEvent.type === "market_up") rate = 0.3; // Lãi 30%
-      else if (randomEvent.type === "market_down") rate = -0.2; // Lỗ 20%
-      else rate = 0.1; // Lãi 10%
+      let rate = 0.1; // Mặc định lãi 10%
+      if (randomEvent.type === "market_up") rate = 0.35; // Lãi đậm 35%
+      else if (randomEvent.type === "market_down") rate = -0.15; // Lỗ 15%
 
       riskProfit = Math.floor(actualInvest * rate);
-      explanationText = `Đầu tư ${actualInvest.toLocaleString()}tr (Lợi suất ${
+      explanationText = `Đầu tư ${actualInvest}tr (Lãi suất ${(
         rate * 100
-      }%). Phần còn lại ${remainingSafe.toLocaleString()}tr gửi ngân hàng.`;
+      ).toFixed(0)}%).`;
     } else if (strategy === "borrow") {
-      // Vay thêm tiền để đầu tư tất tay (Vốn + Vay)
       const loan = borrowAmount[0];
       const totalCapital = savings + loan;
-      setDebt((prev) => prev + loan);
-      interestCost = Math.floor((debt + loan) * BORROW_RATE); // Trả lãi cho cả nợ cũ và mới
+      // Lưu ý: Chưa update state debt ngay, chờ chốt turn
+      const currentDebt = debt + loan;
+      interestCost = Math.floor(currentDebt * BORROW_RATE);
 
-      let rate = 0;
-      if (randomEvent.type === "market_up") rate = 0.4; // Đòn bẩy lãi cao: 40%
-      else if (randomEvent.type === "market_down") rate = -0.25; // Lỗ nặng: 25%
-      else rate = 0.05; // Lãi thấp (5%) không đủ trả lãi vay (12%)
+      let rate = 0.08;
+      if (randomEvent.type === "market_up")
+        rate = 0.5; // Đòn bẩy lãi cực to: 50%
+      else if (randomEvent.type === "market_down") rate = -0.3; // Lỗ cực nặng: 30%
 
       riskProfit = Math.floor(totalCapital * rate);
-      explanationText = `Dùng đòn bẩy ${loan.toLocaleString()}tr. Tổng vốn ${totalCapital.toLocaleString()}tr đầu tư với lợi suất ${
+      explanationText = `Vay thêm ${loan}tr. Tổng vốn ${totalCapital}tr (Lãi suất ${(
         rate * 100
-      }%. Trả lãi vay 12%.`;
+      ).toFixed(0)}%).`;
     }
 
-    // C. Tác động Hạnh phúc
-    let happyChange = 0;
-    if (riskProfit > 0) happyChange += 5;
-    if (riskProfit < 0) happyChange -= 10;
-    if (debt > savings * 2) happyChange -= 5; // Nợ nhiều stress
+    // Giá nhà tăng (Khó hơn: Tăng trung bình 10-15% mỗi năm)
+    let houseChangeRate = 0.1;
+    if (randomEvent.type === "market_up") houseChangeRate = 0.18; // Sốt đất tăng 18%
+    if (randomEvent.type === "market_down") houseChangeRate = 0.05; // Tăng chậm 5%
 
-    // D. Thay đổi giá nhà
-    let houseChangeRate = 0.08; // Tăng trung bình 8%
-    if (randomEvent.type === "market_up") houseChangeRate = 0.15;
-    if (randomEvent.type === "policy") houseChangeRate = -0.02; // Giảm nhẹ
-
-    // --- CẬP NHẬT STATE ---
-    const totalChange =
-      baseIncome + safeProfit + riskProfit - interestCost + eventImpact;
-    const newSavings = savings + totalChange;
-    const newHousePrice = Math.floor(housePrice * (1 + houseChangeRate));
-    const newHappiness = Math.min(100, Math.max(0, happiness + happyChange));
-
-    setAge((prev) => prev + 1);
-    setSavings(newSavings);
-    setHousePrice(newHousePrice);
-    setHappiness(newHappiness);
-
-    // Lưu chi tiết để hiển thị bảng phân tích
-    setTurnDetail({
-      income: baseIncome,
+    // Lưu dữ liệu tạm để chuyển sang bước chọn Scenario
+    setPendingTurnData({
+      baseIncome,
       safeProfit,
       riskProfit,
       interestCost,
-      eventImpact,
+      explanationText,
+      houseChangeRate,
+      randomEvent,
+      loanAmount: strategy === "borrow" ? borrowAmount[0] : 0,
+    });
+
+    // Chọn ngẫu nhiên 1 Scenario
+    setCurrentScenario(SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
+    setGameState("scenario");
+  };
+
+  // --- LOGIC BƯỚC 2: XỬ LÝ LỰA CHỌN SCENARIO ---
+  const handleScenarioChoice = (optionIndex: number) => {
+    if (!pendingTurnData || !currentScenario) return;
+
+    const choice = currentScenario.options[optionIndex];
+
+    // Tổng hợp tất cả thay đổi
+    const totalChange =
+      pendingTurnData.baseIncome +
+      pendingTurnData.safeProfit +
+      pendingTurnData.riskProfit -
+      pendingTurnData.interestCost +
+      choice.moneyChange;
+
+    const newSavings = savings + totalChange;
+    const newDebt = debt + pendingTurnData.loanAmount;
+    const newHousePrice = Math.floor(
+      housePrice * (1 + pendingTurnData.houseChangeRate)
+    );
+    const newHappiness = Math.min(
+      100,
+      Math.max(0, happiness + choice.happinessChange)
+    );
+
+    // Cập nhật State chính thức
+    setAge((prev) => prev + 1);
+    setSavings(newSavings);
+    setDebt(newDebt);
+    setHousePrice(newHousePrice);
+    setHappiness(newHappiness);
+
+    // Lưu bảng phân tích
+    setTurnDetail({
+      income: pendingTurnData.baseIncome,
+      safeProfit: pendingTurnData.safeProfit,
+      riskProfit: pendingTurnData.riskProfit,
+      interestCost: pendingTurnData.interestCost,
+      scenarioImpact: choice.moneyChange,
       totalChange,
-      explanation: explanationText,
+      explanation: pendingTurnData.explanationText,
+      scenarioText: `${currentScenario.question} -> Bạn chọn: ${choice.text}. ${choice.outcomeText}`,
     });
 
     // Log lịch sử
-    const logMsg = `${age + 1} tuổi: ${randomEvent.description}`;
-    setHistory((prev) => [logMsg, ...prev].slice(0, 4));
+    const logMsg = `${age + 1} tuổi: ${choice.outcomeText} (${
+      choice.moneyChange > 0 ? "+" : ""
+    }${choice.moneyChange}tr)`;
+    setHistory((prev) => [logMsg, ...prev].slice(0, 3));
 
-    if (totalChange > 0)
-      toast.success(`Tài sản tăng ${totalChange.toLocaleString()}tr`);
-    else
-      toast.error(`Tài sản giảm ${Math.abs(totalChange).toLocaleString()}tr`);
+    setGameState("summary");
   };
 
   const handleBuyHouse = () => {
     const netWorth = savings - debt;
-    if (netWorth >= housePrice * 0.3) {
+    // Điều kiện thắng: Đủ 50% giá nhà
+    if (netWorth >= housePrice * 0.5) {
       setGameState("won");
     } else {
       toast.warning(
-        `Bạn cần tài sản ròng tối thiểu ${(
-          housePrice * 0.3
-        ).toLocaleString()}tr (30%) để mua!`
+        `Cần tối thiểu ${(housePrice * 0.5).toLocaleString()}tr (50%) để mua!`
       );
     }
   };
@@ -256,10 +408,10 @@ export default function BoardGamePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfbf7] font-sans selection:bg-red-200">
+    <div className="min-h-screen bg-[#fdfbf7] font-sans selection:bg-red-200 pb-20">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         {/* --- INTRO SCREEN --- */}
         {gameState === "intro" && (
           <motion.div
@@ -268,58 +420,59 @@ export default function BoardGamePage() {
             className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6"
           >
             <h1 className="text-6xl font-black text-slate-800">
-              Hành Trình <span className="text-red-600">An Cư</span>
+              Thử Thách <span className="text-red-600">Mua Nhà</span>
             </h1>
-            <p className="text-xl text-slate-600 max-w-2xl">
-              Mục tiêu: Mua nhà trước tuổi 60. <br />
-              Hãy cân nhắc kỹ giữa <strong>Tiết kiệm</strong>,{" "}
-              <strong>Đầu tư</strong> và <strong>Vay nợ</strong>.
-            </p>
+            <Card className="p-6 max-w-lg bg-white border-2 border-primary/20 shadow-xl">
+              <h3 className="font-bold text-xl mb-4 text-primary">
+                MỤC TIÊU KHÓ NHẰN:
+              </h3>
+              <ul className="text-left space-y-3 text-slate-700">
+                <li className="flex items-center gap-2">
+                  <Home size={20} className="text-red-500" /> Mua nhà trước tuổi{" "}
+                  <strong>40</strong>.
+                </li>
+                <li className="flex items-center gap-2">
+                  <Wallet size={20} className="text-green-500" /> Có đủ{" "}
+                  <strong>50%</strong> giá trị nhà.
+                </li>
+                <li className="flex items-center gap-2">
+                  <AlertCircle size={20} className="text-orange-500" /> Giá nhà
+                  tăng <strong>nhanh hơn</strong> lương.
+                </li>
+              </ul>
+            </Card>
             <Button
               size="lg"
               onClick={() => setGameState("playing")}
-              className="text-lg px-12 py-6 rounded-full bg-red-600 hover:bg-red-700 shadow-xl"
+              className="text-lg px-12 py-6 rounded-full bg-red-600 hover:bg-red-700 shadow-xl animate-bounce"
             >
-              Bắt đầu ngay
+              Chấp nhận thử thách
             </Button>
           </motion.div>
         )}
 
-        {/* --- PLAYING SCREEN --- */}
-        {gameState === "playing" && (
+        {/* --- MAIN GAME UI --- */}
+        {(gameState === "playing" ||
+          gameState === "scenario" ||
+          gameState === "summary") && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Cột Trái: Dashboard (4 cols) */}
+            {/* Cột Trái: Dashboard */}
             <div className="lg:col-span-4 space-y-6">
               <Card className="p-6 border-2 border-slate-200 bg-white shadow-lg sticky top-24">
                 <div className="text-center mb-6">
-                  <Badge variant="outline" className="mb-2">
-                    Năm {2025 + (age - 22)}
-                  </Badge>
-                  <div className="text-5xl font-black text-slate-800">
-                    {age} <span className="text-lg text-slate-400">tuổi</span>
+                  <div className="text-6xl font-black text-slate-800">
+                    {age}
                   </div>
+                  <div className="text-sm text-slate-500 font-bold uppercase tracking-widest">
+                    Tuổi / 40
+                  </div>
+                  <Progress
+                    value={((age - 22) / (40 - 22)) * 100}
+                    className="h-2 mt-2"
+                  />
                 </div>
 
-                {/* Stats Cards */}
-                <div className="space-y-3">
-                  <div className="flex justify-between p-3 bg-green-50 rounded-lg border border-green-100">
-                    <span className="flex gap-2 text-green-700 font-bold">
-                      <Wallet size={20} /> Tiền mặt
-                    </span>
-                    <span className="font-bold text-green-800">
-                      {savings.toLocaleString()} Tr
-                    </span>
-                  </div>
-                  {debt > 0 && (
-                    <div className="flex justify-between p-3 bg-slate-100 rounded-lg border border-slate-200">
-                      <span className="flex gap-2 text-slate-700 font-bold">
-                        <AlertCircle size={20} /> Nợ
-                      </span>
-                      <span className="font-bold text-slate-800">
-                        -{debt.toLocaleString()} Tr
-                      </span>
-                    </div>
-                  )}
+                <div className="space-y-4">
                   <div className="flex justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
                     <span className="flex gap-2 text-blue-700 font-bold">
                       <Calculator size={20} /> Tài sản ròng
@@ -336,201 +489,199 @@ export default function BoardGamePage() {
                       {housePrice.toLocaleString()} Tr
                     </span>
                   </div>
-                  <div className="flex justify-between p-3 bg-pink-50 rounded-lg border border-pink-100">
-                    <span className="flex gap-2 text-pink-700 font-bold">
-                      <Heart size={20} /> Hạnh phúc
-                    </span>
-                    <span className="font-bold text-pink-800">{happiness}</span>
-                  </div>
-                </div>
 
-                <div className="mt-4">
-                  <Progress
-                    value={((savings - debt) / housePrice) * 100}
-                    className="h-2 bg-slate-200"
-          
-                  />
-                  <p className="text-xs text-center mt-2 text-slate-500">
-                    Tiến độ mua nhà:{" "}
-                    {Math.floor(((savings - debt) / housePrice) * 100)}%
-                  </p>
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs mb-1 font-bold">
+                      <span>Tiến độ (Cần 50%)</span>
+                      <span
+                        className={
+                          savings - debt >= housePrice * 0.5
+                            ? "text-green-600"
+                            : "text-slate-500"
+                        }
+                      >
+                        {Math.floor(((savings - debt) / housePrice) * 100)}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={((savings - debt) / (housePrice * 0.5)) * 100}
+                      className="h-3 bg-slate-200"
+                    />
+                  </div>
                 </div>
               </Card>
             </div>
 
-            {/* Cột Phải: Gameplay Area (8 cols) */}
+            {/* Cột Phải: Action Area */}
             <div className="lg:col-span-8 space-y-6">
-              {/* 1. KHU VỰC ĐIỀU KHIỂN CHIẾN LƯỢC */}
-              <div className="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <Briefcase className="text-primary" /> Kế hoạch tài chính năm
-                  nay?
-                </h3>
+              {/* 1. KHU VỰC LỰA CHỌN CHIẾN LƯỢC (Chỉ hiện khi đang Playing) */}
+              {gameState === "playing" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white p-6 rounded-2xl shadow-md border border-slate-200"
+                >
+                  <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <Briefcase className="text-primary" /> 1. Chọn chiến lược
+                    năm nay
+                  </h3>
 
-                {/* Các nút chọn chiến lược */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <button
-                    onClick={() => setStrategy("safe")}
-                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      strategy === "safe"
-                        ? "border-green-500 bg-green-50 ring-2 ring-green-200"
-                        : "border-slate-200 hover:border-green-300"
-                    }`}
-                  >
-                    <PiggyBank
-                      size={32}
-                      className={
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <button
+                      onClick={() => setStrategy("safe")}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                         strategy === "safe"
-                          ? "text-green-600"
-                          : "text-slate-400"
-                      }
-                    />
-                    <span className="font-bold text-sm">Gửi Tiết Kiệm</span>
-                    <span className="text-xs text-slate-500">
-                      An toàn tuyệt đối
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => setStrategy("invest")}
-                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      strategy === "invest"
-                        ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
-                        : "border-slate-200 hover:border-blue-300"
-                    }`}
-                  >
-                    <TrendingUp
-                      size={32}
-                      className={
+                          ? "border-green-500 bg-green-50 ring-2 ring-green-200"
+                          : "border-slate-200 hover:border-green-300"
+                      }`}
+                    >
+                      <PiggyBank
+                        size={32}
+                        className={
+                          strategy === "safe"
+                            ? "text-green-600"
+                            : "text-slate-400"
+                        }
+                      />
+                      <span className="font-bold text-sm">
+                        Tiết Kiệm (Lãi 5%)
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setStrategy("invest")}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                         strategy === "invest"
-                          ? "text-blue-600"
-                          : "text-slate-400"
-                      }
-                    />
-                    <span className="font-bold text-sm">Đầu Tư</span>
-                    <span className="text-xs text-slate-500">
-                      Rủi ro trung bình
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => setStrategy("borrow")}
-                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                      strategy === "borrow"
-                        ? "border-orange-500 bg-orange-50 ring-2 ring-orange-200"
-                        : "border-slate-200 hover:border-orange-300"
-                    }`}
-                  >
-                    <Banknote
-                      size={32}
-                      className={
+                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
+                          : "border-slate-200 hover:border-blue-300"
+                      }`}
+                    >
+                      <TrendingUp
+                        size={32}
+                        className={
+                          strategy === "invest"
+                            ? "text-blue-600"
+                            : "text-slate-400"
+                        }
+                      />
+                      <span className="font-bold text-sm">Đầu Tư</span>
+                    </button>
+                    <button
+                      onClick={() => setStrategy("borrow")}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                         strategy === "borrow"
-                          ? "text-orange-600"
-                          : "text-slate-400"
-                      }
-                    />
-                    <span className="font-bold text-sm">Vay & Đầu tư</span>
-                    <span className="text-xs text-slate-500">Rất rủi ro</span>
-                  </button>
-                </div>
-
-                {/* SLIDER ĐIỀU CHỈNH SỐ TIỀN */}
-                <AnimatePresence mode="wait">
-                  {strategy === "invest" && (
-                    <motion.div
-                      key="invest-slider"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="bg-blue-50 p-4 rounded-xl mb-6 border border-blue-100"
+                          ? "border-orange-500 bg-orange-50 ring-2 ring-orange-200"
+                          : "border-slate-200 hover:border-orange-300"
+                      }`}
                     >
-                      <div className="flex justify-between mb-2">
-                        <span className="font-bold text-blue-800 text-sm">
-                          Số tiền trích đầu tư:
-                        </span>
-                        <span className="font-bold text-blue-800">
-                          {investAmount} Triệu
-                        </span>
-                      </div>
-                      <Slider
-                        defaultValue={[50]}
-                        max={savings} // Không thể đầu tư quá số tiền mình có
-                        min={0}
-                        step={10}
-                        onValueChange={setInvestAmount}
-                        className="py-4"
+                      <Banknote
+                        size={32}
+                        className={
+                          strategy === "borrow"
+                            ? "text-orange-600"
+                            : "text-slate-400"
+                        }
                       />
-                      <p className="text-xs text-blue-600 italic">
-                        Phần còn lại (
-                        {Math.max(
-                          0,
-                          savings - Number(investAmount)
-                        ).toLocaleString()}
-                        tr) sẽ được gửi tiết kiệm an toàn (6%/năm).
-                      </p>
-                    </motion.div>
-                  )}
+                      <span className="font-bold text-sm">Vay & Đầu tư</span>
+                    </button>
+                  </div>
 
-                  {strategy === "borrow" && (
-                    <motion.div
-                      key="borrow-slider"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="bg-orange-50 p-4 rounded-xl mb-6 border border-orange-100"
-                    >
-                      <div className="flex justify-between mb-2">
-                        <span className="font-bold text-orange-800 text-sm">
-                          Số tiền muốn vay thêm:
-                        </span>
-                        <span className="font-bold text-orange-800">
-                          {borrowAmount} Triệu
-                        </span>
-                      </div>
-                      <Slider
-                        defaultValue={[100]}
-                        max={500}
-                        min={50}
-                        step={50}
-                        onValueChange={setBorrowAmount}
-                        className="py-4"
-                      />
-                      <p className="text-xs text-orange-600 italic">
-                        Lãi suất vay 12%/năm cố định. Nếu đầu tư lỗ, bạn vẫn
-                        phải trả lãi này!
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  {/* SLIDERS */}
+                  <AnimatePresence mode="wait">
+                    {strategy === "invest" && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="bg-blue-50 p-4 rounded-xl mb-6"
+                      >
+                        <div className="flex justify-between mb-2 text-blue-900 font-bold">
+                          <span>Trích tiền đầu tư:</span>
+                          <span>{investAmount} Triệu</span>
+                        </div>
+                        <Slider
+                          defaultValue={[50]}
+                          max={savings}
+                          min={0}
+                          step={10}
+                          onValueChange={setInvestAmount}
+                        />
+                      </motion.div>
+                    )}
+                    {strategy === "borrow" && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="bg-orange-50 p-4 rounded-xl mb-6"
+                      >
+                        <div className="flex justify-between mb-2 text-orange-900 font-bold">
+                          <span>Vay thêm ngân hàng:</span>
+                          <span>{borrowAmount} Triệu</span>
+                        </div>
+                        <Slider
+                          defaultValue={[100]}
+                          max={500}
+                          min={50}
+                          step={50}
+                          onValueChange={setBorrowAmount}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
-                {/* Nút hành động */}
-                <div className="flex gap-4">
                   <Button
-                    onClick={handleNextTurn}
+                    onClick={calculateFinancials}
                     size="lg"
-                    className="flex-1 bg-slate-900 hover:bg-black py-6 text-lg shadow-xl"
+                    className="w-full bg-slate-900 hover:bg-black py-6 text-lg shadow-xl group"
                   >
-                    Thực hiện <ArrowRight className="ml-2" />
+                    Tiếp tục{" "}
+                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                  <Button
-                    onClick={handleBuyHouse}
-                    disabled={savings - debt < housePrice * 0.3}
-                    size="lg"
-                    variant="outline"
-                    className={`flex-1 py-6 text-lg border-2 ${
-                      savings - debt >= housePrice * 0.3
-                        ? "border-green-500 text-green-700 bg-green-50 animate-pulse"
-                        : "border-slate-200 text-slate-400"
-                    }`}
-                  >
-                    <Home className="mr-2" /> Mua Nhà
-                  </Button>
-                </div>
-              </div>
+                </motion.div>
+              )}
 
-              {/* 2. BẢNG PHÂN TÍCH TÀI CHÍNH (TURN ANALYSIS) - MỚI */}
+              {/* 2. SCENARIO MODAL (Hiện ra khi user bấm Tiếp tục) */}
               <AnimatePresence>
-                {turnDetail && (
+                {gameState === "scenario" && currentScenario && (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-white p-8 rounded-2xl shadow-2xl border-4 border-yellow-400 relative z-20"
+                  >
+                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 font-black px-6 py-2 rounded-full uppercase tracking-wider">
+                      Tình huống bất ngờ
+                    </div>
+                    <h3 className="text-2xl font-bold text-center mt-6 mb-8 text-slate-800">
+                      {currentScenario.question}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {currentScenario.options.map((opt, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleScenarioChoice(idx)}
+                          className="p-6 rounded-xl border-2 border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left group"
+                        >
+                          <div className="font-bold text-lg text-slate-800 group-hover:text-primary mb-1">
+                            {opt.text}
+                          </div>
+                          <div className="text-sm text-slate-500">
+                            {/* Hint nhẹ về tác động */}
+                            {opt.happinessChange > 0
+                              ? "🙂 Tinh thần tốt"
+                              : opt.happinessChange < 0
+                              ? "😓 Áp lực"
+                              : ""}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* 3. BẢNG TỔNG KẾT NĂM (SUMMARY) */}
+              <AnimatePresence>
+                {gameState === "summary" && turnDetail && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -538,8 +689,7 @@ export default function BoardGamePage() {
                   >
                     <div className="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
                       <h4 className="font-bold text-slate-700 flex items-center gap-2">
-                        <Calculator size={18} /> Báo cáo tài chính năm{" "}
-                        {2025 + (age - 23)}
+                        <Calculator size={18} /> Kết quả tài chính
                       </h4>
                       <span
                         className={`text-sm font-bold px-3 py-1 rounded-full ${
@@ -548,26 +698,23 @@ export default function BoardGamePage() {
                             : "bg-red-100 text-red-700"
                         }`}
                       >
-                        Tổng kết: {turnDetail.totalChange > 0 ? "+" : ""}
+                        {turnDetail.totalChange > 0 ? "+" : ""}
                         {turnDetail.totalChange.toLocaleString()} Tr
                       </span>
                     </div>
 
-                    <div className="p-5 space-y-3 text-sm">
+                    <div className="p-5 space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-slate-500 flex items-center gap-2">
-                          <Plus size={14} /> Thu nhập từ lương (đã trừ sinh
-                          hoạt)
+                        <span className="text-slate-500">
+                          Thu nhập (Lương + Thưởng)
                         </span>
-                        <span className="font-medium text-slate-900">
+                        <span className="font-medium">
                           +{turnDetail.income} Tr
                         </span>
                       </div>
                       {turnDetail.safeProfit > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-slate-500 flex items-center gap-2">
-                            <Plus size={14} /> Lãi tiết kiệm (6%)
-                          </span>
+                          <span className="text-slate-500">Lãi tiết kiệm</span>
                           <span className="font-medium text-green-600">
                             +{turnDetail.safeProfit} Tr
                           </span>
@@ -575,14 +722,7 @@ export default function BoardGamePage() {
                       )}
                       {turnDetail.riskProfit !== 0 && (
                         <div className="flex justify-between">
-                          <span className="text-slate-500 flex items-center gap-2">
-                            {turnDetail.riskProfit > 0 ? (
-                              <Plus size={14} />
-                            ) : (
-                              <Minus size={14} />
-                            )}
-                            Hiệu quả đầu tư
-                          </span>
+                          <span className="text-slate-500">Đầu tư</span>
                           <span
                             className={`font-medium ${
                               turnDetail.riskProfit > 0
@@ -590,47 +730,70 @@ export default function BoardGamePage() {
                                 : "text-red-600"
                             }`}
                           >
-                            {turnDetail.riskProfit > 0 ? "+" : ""}
                             {turnDetail.riskProfit} Tr
                           </span>
                         </div>
                       )}
                       {turnDetail.interestCost > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-slate-500 flex items-center gap-2">
-                            <Minus size={14} /> Chi phí lãi vay (12%)
-                          </span>
+                          <span className="text-slate-500">Trả lãi vay</span>
                           <span className="font-medium text-red-600">
                             -{turnDetail.interestCost} Tr
                           </span>
                         </div>
                       )}
+                      {turnDetail.scenarioImpact !== 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-slate-500">
+                            Sự kiện đời sống
+                          </span>
+                          <span
+                            className={`font-medium ${
+                              turnDetail.scenarioImpact > 0
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {turnDetail.scenarioImpact} Tr
+                          </span>
+                        </div>
+                      )}
 
-                      <div className="mt-4 pt-3 border-t border-dashed border-slate-200">
-                        <p className="text-slate-600 italic text-xs">
-                          <span className="font-bold">Giải trình:</span>{" "}
+                      <div className="mt-4 pt-3 border-t border-dashed border-slate-200 bg-yellow-50/50 p-3 rounded-lg">
+                        <p className="text-slate-700 italic text-xs mb-1">
+                          <span className="font-bold">Chiến lược:</span>{" "}
                           {turnDetail.explanation}
                         </p>
+                        <p className="text-slate-700 italic text-xs">
+                          <span className="font-bold">Sự kiện:</span>{" "}
+                          {turnDetail.scenarioText}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-3 mt-4">
+                        <Button
+                          onClick={() => setGameState("playing")}
+                          className="flex-1"
+                          variant="outline"
+                        >
+                          Năm tiếp theo
+                        </Button>
+                        <Button
+                          onClick={handleBuyHouse}
+                          disabled={savings - debt < housePrice * 0.5}
+                          className={`flex-1 ${
+                            savings - debt >= housePrice * 0.5
+                              ? "bg-green-600 hover:bg-green-700 text-white animate-pulse"
+                              : ""
+                          }`}
+                        >
+                          Mua Nhà Ngay
+                        </Button>
                       </div>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* 3. Lịch sử ngắn gọn */}
-              <div className="space-y-2">
-                <h4 className="font-bold text-slate-400 uppercase text-xs tracking-wider">
-                  Nhật ký sự kiện
-                </h4>
-                {history.slice(0, 2).map((log, index) => (
-                  <div
-                    key={index}
-                    className="text-sm text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100"
-                  >
-                    {log}
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         )}
@@ -658,14 +821,14 @@ export default function BoardGamePage() {
                 gameState === "won" ? "text-green-700" : "text-red-700"
               }`}
             >
-              {gameState === "won" ? "CHÚC MỪNG!" : "GAME OVER"}
+              {gameState === "won" ? "CHÚC MỪNG!" : "GIẤC MƠ TAN VỠ"}
             </h2>
             <p className="text-xl text-slate-600 mb-8">
               {gameState === "won"
-                ? `Bạn đã mua được nhà ở tuổi ${age} với tài sản ròng ${(
+                ? `Bạn đã mua được nhà ở tuổi ${age}! Tổng tài sản: ${(
                     savings - debt
-                  ).toLocaleString()}tr.`
-                : `Bạn dừng bước ở tuổi ${age}. Giá nhà đã bỏ xa thu nhập của bạn.`}
+                  ).toLocaleString()}tr. Sự kiên trì và chiến thuật hợp lý đã giúp bạn an cư.`
+                : `Bạn đã bước sang tuổi ${age} mà vẫn chưa đủ tiền mua nhà (Giá nhà: ${housePrice.toLocaleString()}tr). Đừng buồn, đây là thực trạng chung của rất nhiều người trẻ hiện nay.`}
             </p>
             <div className="flex gap-4 justify-center">
               <Button onClick={resetGame} size="lg">

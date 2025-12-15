@@ -5,15 +5,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import {
   TrendingUp,
   AlertTriangle,
   ArrowDown,
   Wallet,
   Building2,
+  ExternalLink,
 } from "lucide-react";
-import Image from "next/image"; // Đảm bảo import Image
+import Image from "next/image";
 
 export function RealitySection() {
   return (
@@ -36,7 +36,45 @@ export function RealitySection() {
           <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">
             {REALITY_SECTION.heading}
           </h2>
-          <div className="w-24 h-1.5 bg-gradient-to-r from-slate-400 to-red-600 mx-auto rounded-full mb-6" />
+          <div className="w-24 h-1.5 bg-gradient-to-r from-slate-400 to-red-600 mx-auto rounded-full mb-10" />
+
+          {/* --- VIDEO PLAYER SECTION (ĐÃ TÍCH HỢP) --- */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative w-full max-w-5xl mx-auto mb-20 group"
+          >
+            {/* Khung viền Video: Tạo cảm giác như màn hình rạp chiếu */}
+            <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white relative aspect-video bg-black">
+              <video
+                className="w-full h-full object-cover"
+                controls
+                autoPlay
+                muted // Bắt buộc phải mute để trình duyệt cho phép tự động phát
+                loop
+                playsInline
+              >
+                <source
+                  src="https://res.cloudinary.com/dratbz8bh/video/upload/v1765809829/Video2_FixAmThanh_h9onye.mp4"
+                  type="video/mp4"
+                />
+                Trình duyệt của bạn không hỗ trợ thẻ video.
+              </video>
+
+              {/* Lớp phủ mờ bên dưới (biến mất khi video chạy hoặc người dùng tương tác) */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end justify-center pb-4">
+                <p className="text-white/70 text-sm italic tracking-wider">
+                  Phim ngắn: Góc khuất giấc mơ đô thị
+                </p>
+              </div>
+            </div>
+
+            {/* Hiệu ứng bóng đổ trang trí dưới video */}
+            <div className="absolute -bottom-6 left-10 right-10 h-10 bg-red-600/30 blur-3xl -z-10 rounded-full opacity-60"></div>
+          </motion.div>
+          {/* ------------------------------------------ */}
 
           {/* STATS HIGHLIGHT - Điểm nhấn số liệu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-10">
@@ -69,7 +107,7 @@ export function RealitySection() {
                   {stat.label}
                 </p>
                 <p
-                  className={`text-2xl font-black font-serif ${
+                  className={`text-2xl font-black ${
                     idx === 0
                       ? "text-green-700"
                       : idx === 1
@@ -89,6 +127,7 @@ export function RealitySection() {
             ))}
           </div>
         </div>
+
         {/* Timeline Content */}
         <div className="relative space-y-24 mt-20">
           {/* Đường kẻ dọc nối (Timeline Line) */}
@@ -118,7 +157,6 @@ export function RealitySection() {
                   }`}
                 >
                   <div className="aspect-[4/3] bg-slate-200 relative overflow-hidden">
-                    {/* Thay thế bằng ảnh thật của bạn */}
                     <Image
                       src={
                         index === 0
@@ -131,11 +169,9 @@ export function RealitySection() {
                     />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                   </div>
-                  {/* Caption giả lập ảnh in */}
                   <div className="mt-3 text-center text-sm text-slate-500 italic">
                     Hình {index + 1}: {item.title}
                   </div>
-                  {/* Ghim giấy (Trang trí) */}
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-red-800 shadow-sm border border-white z-20"></div>
                 </div>
               </div>
@@ -170,7 +206,7 @@ export function RealitySection() {
                         <AlertTriangle size={20} />
                       )}
                     </div>
-                    <h3 className="text-2xl font-bold  text-foreground">
+                    <h3 className="text-2xl font-bold text-foreground">
                       {item.title}
                     </h3>
                   </div>
@@ -186,7 +222,7 @@ export function RealitySection() {
                     {item.link && (
                       <Link
                         href={item.link}
-                        className="text-xs font-bold text-slate-500 hover:text-primary flex items-center gap-1 transition-colors"
+                        className="text-xs font-bold text-slate-500 hover:text-primary flex items-center gap-1 transition-colors mt-2"
                       >
                         Tìm hiểu khái niệm <ExternalLink size={10} />
                       </Link>

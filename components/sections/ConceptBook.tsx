@@ -4,32 +4,128 @@ import React, { useRef } from "react";
 import HTMLFlipBook from "react-pageflip";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Quote, BookOpen, Bookmark } from "lucide-react";
-import { BOOK_CONCEPTS } from "@/lib/data";
+import { Quote, BookOpen, Bookmark, Square } from "lucide-react";
+// Đã thay đổi import để sử dụng cấu trúc mới
+import { BOOK_PAGES, ContentBlock, BookPage } from "@/lib/data";
 
 /* =======================
-   Types & Interfaces
+   Types & Interfaces (Đã cập nhật)
 ======================= */
 
-type BookConcept = {
-  title: string;
-  illustration: string;
-  content: string;
-  quote: string;
-  source: string;
-  connection: string;
-};
-
 type PageProps = {
-  number: number;
-  item: BookConcept;
+  // Thay đổi type item từ BookConcept cũ sang BookPage mới
+  pageData: BookPage;
 };
 
 // Sử dụng React.ComponentPropsWithRef để đảm bảo ref type chính xác cho div
 type DivProps = React.ComponentPropsWithRef<"div">;
 
 /* =======================
-   Cover Page (Bìa Sách)
+   Block Rendering Functions
+======================= */
+
+// Hàm render từng khối nội dung
+const renderBlock = (block: ContentBlock, index: number) => {
+  switch (block.type) {
+    case "chapter-header":
+      return (
+        <h1
+          key={index}
+          className="text-2xl md:text-3xl font-black text-[#3E2723] leading-snug tracking-wider uppercase mb-4 mt-2 border-b-2 border-[#8D6E63]/30 pb-2"
+        >
+          {block.content}
+        </h1>
+      );
+    case "section-title":
+      return (
+        <h2
+          key={index}
+          className="text-lg md:text-xl font-bold text-[#5D4037] leading-tight mt-4 mb-2 border-l-4 border-[#FF9800] pl-3"
+        >
+          {block.content}
+        </h2>
+      );
+    case "paragraph":
+      return (
+        <p
+          key={index}
+          className="text-sm text-[#4E342E] leading-relaxed text-justify mb-3"
+        >
+          {block.content}
+        </p>
+      );
+    case "image":
+      if (!block.src) return null;
+      return (
+        <div
+          key={index}
+          className="relative w-full aspect-video rounded-md overflow-hidden border border-[#8D6E63]/20 shadow-sm flex-shrink-0 my-3"
+        >
+          <Image
+            src={block.src}
+            alt={block.caption || "Illustration"}
+            fill
+            className="object-cover sepia-[.25] hover:sepia-0 transition-all duration-500"
+            unoptimized // Sử dụng cho các URL từ cloudinary
+          />
+          {block.caption && (
+            <span className="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[10px] text-center p-0.5 italic">
+              {block.caption}
+            </span>
+          )}
+        </div>
+      );
+    case "quote":
+      return (
+        <div
+          key={index}
+          className="bg-[#FFF3E0] p-3 rounded-r-md border-l-4 border-[#FF9800] relative my-3 shadow-sm"
+        >
+          <Quote
+            size={12}
+            className="absolute top-2 left-2 text-[#FF9800]/40"
+          />
+          <p className="text-xs text-[#5D4037] italic pl-3 leading-snug">
+            {block.content}
+          </p>
+          {block.source && (
+            <p className="text-[10px] text-[#8D6E63] text-right mt-1 font-bold">
+              — {block.source}
+            </p>
+          )}
+        </div>
+      );
+    case "connection-box":
+      return (
+        <div
+          key={index}
+          className="mt-4 pt-4 border-t border-[#8D6E63]/10"
+        >
+          <div className="bg-[#3E2723] text-[#FFE0B2] p-3 rounded-md shadow-md relative group">
+            <div className="absolute -top-3 left-4 bg-[#FFB74D] text-[#3E2723] text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+              <Bookmark size={10} fill="currentColor" />
+              {block.title || "LIÊN HỆ"}
+            </div>
+            <p className="text-xs leading-relaxed opacity-90 mt-1 group-hover:opacity-100 transition-opacity">
+              {block.content}
+            </p>
+          </div>
+        </div>
+      );
+    case "list-item":
+      return (
+        <div key={index} className="flex items-start text-sm text-[#4E342E] leading-relaxed mb-1.5 ml-2">
+          <Square size={6} fill="#5D4037" className="mt-2 mr-2 flex-shrink-0" />
+          <span className={block.emphasis ? "font-semibold" : ""}>{block.content}</span>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+/* =======================
+   Cover Page (Bìa Sách) - Giữ nguyên
 ======================= */
 
 const Cover = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
@@ -74,84 +170,45 @@ const Cover = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
 Cover.displayName = "Cover";
 
 /* =======================
-   Content Page (Trang Nội Dung)
+   Content Page (Trang Nội Dung) - Đã thay đổi logic
 ======================= */
 
 const Page = React.forwardRef<HTMLDivElement, PageProps>(
-  ({ number, item }, ref) => {
+  // Nhận pageData thay vì number và item
+  ({ pageData }, ref) => {
     return (
       <div
         ref={ref}
         className="bg-[#FFF8E1] h-full shadow-inner border-r border-[#E0E0E0] relative overflow-hidden flex flex-col"
       >
-        {/* Paper Texture Overlay */}
+        {/* Paper Texture Overlay (Giữ nguyên uniform texture) */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-60 pointer-events-none mix-blend-multiply" />
 
         <div className="relative z-10 flex flex-col h-full p-6 md:p-8">
-          {/* Header: Chapter & Page Number */}
+
+          {/* Header: Chapter Title & Page Number */}
           <div className="flex justify-between items-end border-b-2 border-[#8D6E63]/30 pb-2 mb-4">
             <span className=" font-bold text-[#8D6E63] text-xs uppercase tracking-widest">
-              Chương 5
+              {pageData.chapterTitle}
             </span>
             <span className=" font-black text-[#D7CCC8] text-4xl leading-none -mb-1">
-              {number.toString().padStart(2, "0")}
+              {pageData.pageNumber.toString().padStart(2, "0")}
             </span>
           </div>
 
-          {/* Body Content Container - Sử dụng flex-1 để đẩy footer xuống */}
-          <div className="flex-1 flex flex-col gap-4 overflow-y-auto scrollbar-none">
-            {/* Title */}
-            <h2 className="text-xl md:text-2xl  font-bold text-[#3E2723] leading-tight">
-              {item.title}
-            </h2>
+          {/* Body Content Container */}
+          {/* Lớp div này dùng để cuộn (nếu nội dung quá dài) và chứa tất cả blocks */}
+          <div className="flex-1 flex flex-col gap-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#8D6E63]/50 scrollbar-track-transparent pr-1">
 
-            {/* Illustration Image */}
-            <div className="relative w-full aspect-video rounded-md overflow-hidden border border-[#8D6E63]/20 shadow-sm flex-shrink-0">
-              <Image
-                src={item.illustration}
-                alt={item.title}
-                fill
-                className="object-cover sepia-[.25] hover:sepia-0 transition-all duration-500"
-              />
-            </div>
+            {/* DUYỆT QUA CÁC BLOCK VÀ RENDER */}
+            {pageData.blocks.map((block, index) => renderBlock(block, index))}
 
-            {/* Main Text */}
-            <p className="text-sm text-[#4E342E] leading-relaxed text-justify font-medium">
-              {item.content}
-            </p>
-
-            {/* Quote Box */}
-            <div className="bg-[#FFF3E0] p-3 rounded-r-md border-l-4 border-[#FF9800] relative mt-1">
-              <Quote
-                size={12}
-                className="absolute top-2 left-2 text-[#FF9800]/40"
-              />
-              <p className="text-xs text-[#5D4037] italic pl-3 leading-snug">
-                {item.quote}
-              </p>
-              <p className="text-[10px] text-[#8D6E63] text-right mt-1 font-bold">
-                — {item.source}
-              </p>
-            </div>
           </div>
 
-          {/* Footer: Connection Box (Luôn nằm dưới cùng) */}
-          <div className="mt-4 pt-4 border-t border-[#8D6E63]/10">
-            <div className="bg-[#3E2723] text-[#FFE0B2] p-3 rounded-md shadow-md relative group">
-              <div className="absolute -top-3 left-4 bg-[#FFB74D] text-[#3E2723] text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
-                <Bookmark size={10} fill="currentColor" />
-                LIÊN HỆ BĐS
-              </div>
-              <p className="text-xs leading-relaxed opacity-90 mt-1 group-hover:opacity-100 transition-opacity">
-                {item.connection}
-              </p>
-            </div>
-          </div>
-
-          {/* Page Number Centered Bottom */}
-          <div className="text-center mt-2">
+          {/* Footer: Page Number Centered Bottom (Dùng absolute position vì body đã có scroll) */}
+          <div className="text-center mt-2 pt-2 border-t border-[#8D6E63]/10">
             <span className="text-[10px] text-[#A1887F] ">
-              - {number} -
+              - {pageData.pageNumber} -
             </span>
           </div>
         </div>
@@ -163,7 +220,7 @@ const Page = React.forwardRef<HTMLDivElement, PageProps>(
 Page.displayName = "Page";
 
 /* =======================
-   Back Cover (Bìa Sau)
+   Back Cover (Bìa Sau) - Giữ nguyên
 ======================= */
 
 const BackCover = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
@@ -243,8 +300,10 @@ export function ConceptBook() {
           <Cover />
 
           {/* Các trang nội dung */}
-          {BOOK_CONCEPTS.map((item, index) => (
-            <Page key={index} number={index + 1} item={item} />
+          {/* Đã thay đổi map từ BOOK_CONCEPTS sang BOOK_PAGES */}
+          {BOOK_PAGES.map((pageData) => (
+            // Chỉ truyền pageData mới vào component
+            <Page key={pageData.pageNumber} pageData={pageData} />
           ))}
 
           {/* Bìa sau */}

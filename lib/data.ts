@@ -284,95 +284,439 @@ export const DETAILED_NEWS = [
   },
 ];
 
-export const BOOK_CONCEPTS = [
+// export const BOOK_CONCEPTS = [
+//   {
+//     page: 1,
+//     title: "Khái niệm và Bản chất KTTT Định hướng XHCN ",
+//     content:
+//       "Kinh tế thị trường định hướng xã hội chủ nghĩa (KTTT ĐH XHCN) là một kiểu nền KTTT phù hợp với Việt Nam, phản ánh trình độ phát triển và điều kiện lịch sử. Bản chất là nền kinh tế vận hành đầy đủ, đồng bộ theo các quy luật của thị trường, đồng thời góp phần hướng tới xác lập xã hội: dân giàu, nước mạnh, dân chủ, công bằng, văn minh. Có sự điều tiết của Nhà nước pháp quyền XHCN do Đảng Cộng sản Việt Nam lãnh đạo.",
+//     quote:
+//       "Là mô hình kinh tế tổng quát của thời kỳ quá độ lên chủ nghĩa xã hội (Đại hội IX).",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765768173/1._chu_nghia_xa_hoi_1719367741915_jsur8p.jpg",
+//     connection:
+//       "Ví dụ trong **Giáo dục - Đào tạo:** Cho phép các trường tư thục cạnh tranh về chất lượng (quy luật thị trường) nhưng Nhà nước phải trợ cấp học phí cho học sinh nghèo (định hướng XHCN) để đảm bảo mọi người đều có cơ hội học tập.",
+//   },
+//   {
+//     page: 2,
+//     title: "Tính Tất yếu Khách quan KTTT ĐH XHCN ",
+//     content:
+//       "Việc phát triển KTTT ĐH XHCN là tất yếu khách quan vì 3 lý do: (1) Phù hợp với xu hướng khách quan, KTTT là sản phẩm của văn minh nhân loại. (2) Do tính ưu việt của mô hình, là phương thức phân bổ nguồn lực hiệu quả nhất và thúc đẩy lực lượng sản xuất phát triển. (3) Phù hợp với khát vọng của nhân dân là 'dân giàu, nước mạnh, dân chủ, công bằng, văn minh'.",
+//     quote:
+//       "Kinh tế thị trường luôn là động lực thúc đẩy lực lượng sản xuất phát triển nhanh và có hiệu quả.",
+//     source: "Giáo trình KTCT Mác - Lênin",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765768297/images_n76axf.jpg",
+//     connection:
+//       "Ví dụ trong **Hội nhập:** Việc tham gia các hiệp định thương mại tự do (FTA) là thể hiện sự phù hợp với xu hướng khách quan, sử dụng quy luật thị trường để mở rộng thị trường, tăng trưởng kinh tế và nâng cao vị thế đất nước.",
+//   },
+//   {
+//     page: 3,
+//     title: "Đặc trưng: Sở hữu & Thành phần KT",
+//     content:
+//       "Là nền kinh tế có nhiều hình thức sở hữu, nhiều thành phần kinh tế (sở hữu toàn dân, tập thể, tư nhân, hỗn hợp...). Trong đó: Kinh tế Nhà nước giữ vai trò chủ đạo, định hướng phát triển. Kinh tế tập thể là nền tảng vững chắc. Kinh tế tư nhân là một động lực quan trọng. Các thành phần kinh tế bình đẳng, hợp tác, cạnh tranh cùng phát triển theo pháp luật.",
+//     quote:
+//       "Kinh tế nhà nước đóng vai trò chủ đạo, cùng với kinh tế tập thể ngày càng trở thành nền tảng vững chắc của nền kinh tế quốc dân.",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765760293/gia-tri-khoa-hoc-cach-mang-thoi-dai-cua-chu-nghia-mac-lenin-tu-tuong-ho-chi-minh-20240517160529_ueutf3.jpg",
+//     connection:
+//       "Ví dụ trong **Sản xuất Công nghiệp:** Cho phép tập đoàn tư nhân sản xuất ô tô (kinh tế tư nhân) nhưng các lĩnh vực năng lượng, quốc phòng (như Tập đoàn Điện lực EVN) vẫn do Nhà nước nắm giữ (kinh tế Nhà nước chủ đạo) để đảm bảo an ninh năng lượng và phát triển hạ tầng chiến lược.",
+//   },
+//   {
+//     page: 4,
+//     title: "Đặc trưng: Vai trò quản lý Nhà nước ",
+//     content:
+//       "Nhà nước quản lý bằng Nhà nước pháp quyền XHCN dưới sự lãnh đạo của Đảng, trên cơ sở tôn trọng các nguyên tắc thị trường. Phương thức quản lý thông qua Pháp luật, Chiến lược, Quy hoạch và **các công cụ kinh tế** (thuế, lãi suất, tỷ giá, chi tiêu công). Vai trò cốt lõi là can thiệp, điều tiết để khắc phục khuyết tật thị trường, đảm bảo cân đối vĩ mô và **điều hòa lợi ích kinh tế**, giảm phân hóa giàu nghèo.",
+//     quote: "Nhà nước pháp quyền XHCN của nhân dân, do nhân dân, vì nhân dân.",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771681/le_nin_1716281116170_izc8la.jpg",
+//     connection:
+//       "Ví dụ trong **An sinh xã hội:** Chính phủ tăng chi ngân sách cho bảo hiểm thất nghiệp và hỗ trợ tiền mặt cho người lao động mất việc làm sau đại dịch, sử dụng **công cụ kinh tế (chi tiêu công)** để điều hòa lợi ích và chia sẻ rủi ro xã hội.",
+//   },
+//   {
+//     page: 5,
+//     title: "Đặc trưng: Tăng trưởng & Công bằng XH",
+//     content:
+//       "Thực hiện gắn tăng trưởng kinh tế với tiến bộ và công bằng xã hội. Tiến bộ và công bằng xã hội không phải là mục tiêu được thực hiện sau mà phải được thực hiện **ngay trong từng chính sách, chiến lược, và từng giai đoạn phát triển**. Công bằng xã hội vừa là mục tiêu thể hiện bản chất XHCN, vừa là điều kiện để phát triển bền vững.",
+//     quote:
+//       "Không thể 'hy sinh' tiến bộ và công bằng xã hội để chạy theo tăng trưởng kinh tế đơn thuần.",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771493/article_tkzsvc.jpg",
+//     connection:
+//       "Ví dụ trong **Thuế:** Áp dụng thuế suất cao hơn (Thuế Thu nhập cá nhân lũy tiến, Thuế Tiêu thụ đặc biệt) với các mặt hàng xa xỉ và thu nhập cao, sau đó dùng số tiền đó để đầu tư vào y tế, giáo dục cho người nghèo. Đây là cách cân bằng lợi ích thông qua công cụ tài chính.",
+//   },
+//   {
+//     page: 6,
+//     title: "Hoàn thiện Thể chế: Khái niệm & Tất yếu ",
+//     content:
+//       "**Thể chế kinh tế** là hệ thống quy tắc, luật pháp điều chỉnh hành vi của các chủ thể kinh tế. **Hoàn thiện thể chế** là yêu cầu khách quan do thể chế hiện tại còn chưa đồng bộ, kém hiệu lực, hiệu quả, chưa tạo đột phá trong huy động nguồn lực. Mục tiêu là phát huy tối đa mặt tích cực của thị trường, khắc phục khuyết tật và nâng cao năng lực quản lý của Nhà nước.",
+//     quote:
+//       "Thể chế kinh tế thị trường là sản phẩm của nhà nước, phải là thể chế phục vụ lợi ích, vì lợi ích của nhân dân.",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771542/bo-sung-phat-trien-hoan-thien-chu-nghia-mac-lenin_xdkrjm.jpg",
+//     connection:
+//       "Ví dụ trong **Thủ tục hành chính:** Thay vì phải nộp hồ sơ giấy tờ phức tạp để thành lập doanh nghiệp, Nhà nước ban hành Nghị định cho phép đăng ký trực tuyến, giảm 80% thời gian xử lý. Đây là hoàn thiện thể chế để tăng hiệu lực và hiệu quả.",
+//   },
+//   {
+//     page: 7,
+//     title: "Hoàn thiện Thể chế: Nội dung chính ",
+//     content:
+//       "**Nội dung hoàn thiện thể chế tập trung vào 3 trụ cột chính:** (1) Hoàn thiện thể chế về sở hữu và các thành phần kinh tế (thể chế hóa quyền tài sản, đảm bảo bình đẳng, phát triển KT tư nhân thành động lực). (2) Hoàn thiện thể chế phát triển đồng bộ các loại thị trường (hàng hóa, vốn, lao động, khoa học-công nghệ). (3) Hoàn thiện thể chế gắn tăng trưởng với công bằng xã hội và hội nhập quốc tế (thực hiện công bằng ngay trong từng chính sách, rà soát pháp luật đáp ứng cam kết quốc tế).",
+//     quote:
+//       "Tạo thuận lợi để phát triển kinh tế tư nhân trở thành một động lực quan trọng của nền kinh tế.",
+//     source: "Giáo trình KTCT Mác - Lênin ",
+//     illustration:
+//       "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771607/cover-bai-hthu-1397x786_vrwvlu.jpg",
+//     connection:
+//       "Ví dụ trong **Thị trường vốn:** Hoàn thiện Luật Chứng khoán và ban hành các quy định minh bạch hóa giao dịch (chống thao túng thị trường) để thu hút vốn quốc tế, phát triển đồng bộ thị trường vốn, giảm thiểu rủi ro cho nhà đầu tư (gắn với hội nhập và công bằng).",
+//   },
+// ];
+
+// src/lib/data.ts
+
+// ... (các export cũ: SITE_CONFIG, CAROUSEL_ITEMS, REALITY_SECTION, THEORY_QUOTES, THEORY_COMPARISON, SOLUTIONS, CONCEPTS, DETAILED_NEWS giữ nguyên)
+// ...
+
+// Xóa BOOK_CONCEPTS cũ
+// export const BOOK_CONCEPTS = [...]; 
+
+
+// ===============================================
+// Cấu trúc Dữ liệu MỚI: Block-based Pages
+// ===============================================
+
+export type BlockType =
+  | "chapter-header"
+  | "section-title"
+  | "paragraph"
+  | "image"
+  | "quote"
+  | "connection-box"
+  | "list-item";
+
+export interface ContentBlock {
+  type: BlockType;
+  content?: string;
+  src?: string; // Dành cho type "image"
+  caption?: string; // Dành cho type "image"
+  author?: string; // Dành cho type "quote"
+  source?: string; // Dành cho type "quote" (source của quote)
+  title?: string; // Dành cho type "connection-box"
+  emphasis?: boolean; // Dành cho list-item, để in đậm
+}
+
+export interface BookPage {
+  pageNumber: number;
+  chapterTitle: string;
+  blocks: ContentBlock[];
+}
+
+
+/**
+ * Dữ liệu sách (9 trang)
+ * Content được lấy và cắt/ghép từ file Nd.txt
+ */
+export const BOOK_PAGES: BookPage[] = [
+  // --- TRANG 1: Khái niệm (Giới thiệu chung) ---
   {
-    page: 1,
-    title: "Khái niệm và Bản chất KTTT Định hướng XHCN ",
-    content:
-      "Kinh tế thị trường định hướng xã hội chủ nghĩa (KTTT ĐH XHCN) là một kiểu nền KTTT phù hợp với Việt Nam, phản ánh trình độ phát triển và điều kiện lịch sử. Bản chất là nền kinh tế vận hành đầy đủ, đồng bộ theo các quy luật của thị trường, đồng thời góp phần hướng tới xác lập xã hội: dân giàu, nước mạnh, dân chủ, công bằng, văn minh. Có sự điều tiết của Nhà nước pháp quyền XHCN do Đảng Cộng sản Việt Nam lãnh đạo.",
-    quote:
-      "Là mô hình kinh tế tổng quát của thời kỳ quá độ lên chủ nghĩa xã hội (Đại hội IX).",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765768173/1._chu_nghia_xa_hoi_1719367741915_jsur8p.jpg",
-    connection:
-      "Ví dụ trong **Giáo dục - Đào tạo:** Cho phép các trường tư thục cạnh tranh về chất lượng (quy luật thị trường) nhưng Nhà nước phải trợ cấp học phí cho học sinh nghèo (định hướng XHCN) để đảm bảo mọi người đều có cơ hội học tập.",
+    pageNumber: 1,
+    chapterTitle: "Phần A: Kinh tế Thị trường Định hướng XHCN",
+    blocks: [
+      { type: "chapter-header", content: "Chương 5: Lý Luận & Bản Chất" },
+      { type: "section-title", content: "I. Khái niệm KTTT Định hướng XHCN" },
+      {
+        type: "paragraph",
+        content: "Mỗi quốc gia có những mô hình kinh tế thị trường khác nhau, không có mô hình kinh tế thị trường chung cho mọi quốc gia"
+      },
+      {
+        type: "paragraph",
+        content: "Ở Việt Nam, mô hình đó là kinh tế thị trường Định hướng Xã Hội Chủ Nghĩa, định nghĩa là:"
+      },
+      {
+        type: "quote",
+        content:
+          "Là nền kinh tế vận hành đầy đủ, đồng bộ theo quy luật thị trường, đồng thời bảo đảm định hướng xã hội chủ nghĩa, nhằm mục tiêu 'dân giàu, nước mạnh, dân chủ, công bằng, văn minh'.",
+        source: "Đại hội XII, Đảng Cộng sản Việt Nam",
+      }
+    ],
   },
+
+  // --- TRANG 2: Khái niệm & Quá trình hình thành ---
   {
-    page: 2,
-    title: "Tính Tất yếu Khách quan KTTT ĐH XHCN ",
-    content:
-      "Việc phát triển KTTT ĐH XHCN là tất yếu khách quan vì 3 lý do: (1) Phù hợp với xu hướng khách quan, KTTT là sản phẩm của văn minh nhân loại. (2) Do tính ưu việt của mô hình, là phương thức phân bổ nguồn lực hiệu quả nhất và thúc đẩy lực lượng sản xuất phát triển. (3) Phù hợp với khát vọng của nhân dân là 'dân giàu, nước mạnh, dân chủ, công bằng, văn minh'.",
-    quote:
-      "Kinh tế thị trường luôn là động lực thúc đẩy lực lượng sản xuất phát triển nhanh và có hiệu quả.",
-    source: "Giáo trình KTCT Mác - Lênin",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765768297/images_n76axf.jpg",
-    connection:
-      "Ví dụ trong **Hội nhập:** Việc tham gia các hiệp định thương mại tự do (FTA) là thể hiện sự phù hợp với xu hướng khách quan, sử dụng quy luật thị trường để mở rộng thị trường, tăng trưởng kinh tế và nâng cao vị thế đất nước.",
+    pageNumber: 2,
+    chapterTitle: "Phần A: Kinh tế Thị trường Định hướng XHCN",
+    blocks: [
+      { type: "section-title", content: "II. Đặc trưng của KTTT ĐH XHCN" },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/dratbz8bh/image/upload/v1765768173/1._chu_nghia_xa_hoi_1719367741915_jsur8p.jpg"
+      },
+      { type: "section-title", content: "1. Mục tiêu phát triển" },
+      {
+        type: "paragraph",
+        content:
+          "Mục tiêu phát triển không chỉ là tăng trưởng kinh tế mà còn hướng tới xây dựng cơ sở vật chất - kỹ thuật của chủ nghĩa xã hội và thực hiện mục tiêu 'dân giàu, nước mạnh, dân chủ, công bằng, văn minh'.",
+      },
+      {
+        type: "connection-box",
+        title: "Khác biệt với KTTT TBCN",
+        content:
+          "Mục tiêu KTTT TBCN là tối đa hóa lợi nhuận cho giai cấp tư sản, giai cấp cầm quyền, còn KTTT ĐH XHCN nhằm mục tiêu nâng cao đời sống nhân dân.",
+      },
+    ],
   },
+
+  // --- TRANG 3: Đặc trưng: Quan hệ Sở hữu & TPKT (Phần 1) ---
   {
-    page: 3,
-    title: "Đặc trưng: Sở hữu & Thành phần KT",
-    content:
-      "Là nền kinh tế có nhiều hình thức sở hữu, nhiều thành phần kinh tế (sở hữu toàn dân, tập thể, tư nhân, hỗn hợp...). Trong đó: Kinh tế Nhà nước giữ vai trò chủ đạo, định hướng phát triển. Kinh tế tập thể là nền tảng vững chắc. Kinh tế tư nhân là một động lực quan trọng. Các thành phần kinh tế bình đẳng, hợp tác, cạnh tranh cùng phát triển theo pháp luật.",
-    quote:
-      "Kinh tế nhà nước đóng vai trò chủ đạo, cùng với kinh tế tập thể ngày càng trở thành nền tảng vững chắc của nền kinh tế quốc dân.",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765760293/gia-tri-khoa-hoc-cach-mang-thoi-dai-cua-chu-nghia-mac-lenin-tu-tuong-ho-chi-minh-20240517160529_ueutf3.jpg",
-    connection:
-      "Ví dụ trong **Sản xuất Công nghiệp:** Cho phép tập đoàn tư nhân sản xuất ô tô (kinh tế tư nhân) nhưng các lĩnh vực năng lượng, quốc phòng (như Tập đoàn Điện lực EVN) vẫn do Nhà nước nắm giữ (kinh tế Nhà nước chủ đạo) để đảm bảo an ninh năng lượng và phát triển hạ tầng chiến lược.",
+    pageNumber: 3,
+    chapterTitle: "Đặc trưng: Sở hữu và Thành phần Kinh tế",
+    blocks: [
+      {
+        type: "section-title",
+        content: "2. Quan hệ sở hữu (SH) và Thành phần kinh tế (TPKT)",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Nước ta có hai loại hình sở hữu cơ bản là **Sở hữu Tư nhân** và **Sở hữu Công cộng** (gồm sở hữu nhà nước và sở hữu tập thể) đối với tư liệu sản xuất và sản phẩm. Hai loại hình này đan xen với nhau tạo thành hình thức sở hữu hỗn hợp.",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/dratbz8bh/image/upload/v1765760293/gia-tri-khoa-hoc-cach-mang-thoi-dai-cua-chu-nghia-mac-lenin-tu-tuong-ho-chi-minh-20240517160529_ueutf3.jpg",
+        caption: "Nền kinh tế nhiều thành phần là biểu hiện bên ngoài của quan hệ sở hữu đa dạng.",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Mỗi thành phần kinh tế sẽ dựa trên một loại hình sở hữu nhất định, ví dụ:",
+      },
+      {
+        type: "list-item",
+        content: "SH Nhà nước: TPKT Nhà nước (Doanh nghiệp nhà nước).",
+      },
+      {
+        type: "list-item",
+        content: "SH Tập thể: TPKT Tập thể (Hợp tác xã).",
+      },
+    ],
   },
+
+  // --- TRANG 4: Đặc trưng: TPKT (Phần 2) và Vai trò ---
   {
-    page: 4,
-    title: "Đặc trưng: Vai trò quản lý Nhà nước ",
-    content:
-      "Nhà nước quản lý bằng Nhà nước pháp quyền XHCN dưới sự lãnh đạo của Đảng, trên cơ sở tôn trọng các nguyên tắc thị trường. Phương thức quản lý thông qua Pháp luật, Chiến lược, Quy hoạch và **các công cụ kinh tế** (thuế, lãi suất, tỷ giá, chi tiêu công). Vai trò cốt lõi là can thiệp, điều tiết để khắc phục khuyết tật thị trường, đảm bảo cân đối vĩ mô và **điều hòa lợi ích kinh tế**, giảm phân hóa giàu nghèo.",
-    quote: "Nhà nước pháp quyền XHCN của nhân dân, do nhân dân, vì nhân dân.",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771681/le_nin_1716281116170_izc8la.jpg",
-    connection:
-      "Ví dụ trong **An sinh xã hội:** Chính phủ tăng chi ngân sách cho bảo hiểm thất nghiệp và hỗ trợ tiền mặt cho người lao động mất việc làm sau đại dịch, sử dụng **công cụ kinh tế (chi tiêu công)** để điều hòa lợi ích và chia sẻ rủi ro xã hội.",
+    pageNumber: 4,
+    chapterTitle: "Đặc trưng: Sở hữu và Thành phần Kinh tế",
+    blocks: [
+      { type: "list-item", content: "SH Tư nhân: TPKT Tư nhân (Công ty TNHH)." },
+      {
+        type: "list-item",
+        content:
+          "SH Hỗn hợp: Hình thức liên doanh liên kết Nhà nước - Tư nhân (Cổ phần hóa doanh nghiệp).",
+      },
+      { type: "section-title", content: "Vị trí và vai trò" },
+      {
+        type: "paragraph",
+        content:
+          "Các thành phần kinh tế bình đẳng, nhưng có vai trò khác nhau trong việc định hướng nền kinh tế:",
+      },
+      {
+        type: "list-item",
+        content:
+          "**Kinh tế Nhà nước (KTNN):** Giữ vai trò chủ đạo (bánh lái điều hướng).",
+        emphasis: true,
+      },
+      {
+        type: "list-item",
+        content:
+          "**Kinh tế Tư nhân (KTTN):** Là động lực quan trọng cho sự phát triển kinh tế (động cơ quyết định nhanh hay chậm).",
+        emphasis: true,
+      },
+      {
+        type: "connection-box",
+        title: "Liên hệ Bất động sản (BĐS)",
+        content:
+          "KTNN (ví dụ: Tập đoàn Điện lực EVN, Nhà ở xã hội) đảm bảo an sinh và hạ tầng chiến lược, trong khi KTTN (ví dụ: VinGroup, Novaland) là động lực phát triển nhà ở thương mại.",
+      },
+      {
+        type: "quote",
+        content:
+          "Sự khác biệt với KTTT TBCN là KTTN là động lực quan trọng nhất, dẫn dắt định hướng nền KT TBCN.",
+        source: "Giáo trình KTCT Mác - Lênin",
+      },
+    ],
   },
+
+  // --- TRANG 5: Đặc trưng: Quan hệ Quản lý ---
   {
-    page: 5,
-    title: "Đặc trưng: Tăng trưởng & Công bằng XH",
-    content:
-      "Thực hiện gắn tăng trưởng kinh tế với tiến bộ và công bằng xã hội. Tiến bộ và công bằng xã hội không phải là mục tiêu được thực hiện sau mà phải được thực hiện **ngay trong từng chính sách, chiến lược, và từng giai đoạn phát triển**. Công bằng xã hội vừa là mục tiêu thể hiện bản chất XHCN, vừa là điều kiện để phát triển bền vững.",
-    quote:
-      "Không thể 'hy sinh' tiến bộ và công bằng xã hội để chạy theo tăng trưởng kinh tế đơn thuần.",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771493/article_tkzsvc.jpg",
-    connection:
-      "Ví dụ trong **Thuế:** Áp dụng thuế suất cao hơn (Thuế Thu nhập cá nhân lũy tiến, Thuế Tiêu thụ đặc biệt) với các mặt hàng xa xỉ và thu nhập cao, sau đó dùng số tiền đó để đầu tư vào y tế, giáo dục cho người nghèo. Đây là cách cân bằng lợi ích thông qua công cụ tài chính.",
+    pageNumber: 5,
+    chapterTitle: "Đặc trưng: Vai trò quản lý Nhà nước",
+    blocks: [
+      {
+        type: "section-title",
+        content: "3. Về quan hệ quản lý nền kinh tế",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Nhà nước can thiệp vào quá trình kinh tế nhằm khắc phục những hạn chế, khuyết tật của thị trường (ví dụ: độc quyền, khủng hoảng, phân hóa giàu nghèo) và định hướng theo mục tiêu đã định.",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Sự can thiệp được thực hiện bằng pháp luật, chiến lược, quy hoạch, chính sách và **công cụ kinh tế** (thuế, lãi suất, chi tiêu công), trên cơ sở tôn trọng nguyên tắc thị trường.",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771681/le_nin_1716281116170_izc8la.jpg",
+        caption: "Sự điều tiết của Nhà nước là công cụ đảm bảo định hướng XHCN."
+      },
+      {
+        type: "connection-box",
+        title: "Khác biệt về bản chất Nhà nước",
+        content:
+          "Nhà nước VN là nhà nước pháp quyền XHCN (của dân, do dân, vì dân), còn Nhà nước TBCN về bản chất là phục vụ lợi ích của giai cấp tư sản, giai cấp cầm quyền.",
+      },
+    ],
   },
+
+  // --- TRANG 6: Đặc trưng: Quan hệ Phân phối ---
   {
-    page: 6,
-    title: "Hoàn thiện Thể chế: Khái niệm & Tất yếu ",
-    content:
-      "**Thể chế kinh tế** là hệ thống quy tắc, luật pháp điều chỉnh hành vi của các chủ thể kinh tế. **Hoàn thiện thể chế** là yêu cầu khách quan do thể chế hiện tại còn chưa đồng bộ, kém hiệu lực, hiệu quả, chưa tạo đột phá trong huy động nguồn lực. Mục tiêu là phát huy tối đa mặt tích cực của thị trường, khắc phục khuyết tật và nâng cao năng lực quản lý của Nhà nước.",
-    quote:
-      "Thể chế kinh tế thị trường là sản phẩm của nhà nước, phải là thể chế phục vụ lợi ích, vì lợi ích của nhân dân.",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771542/bo-sung-phat-trien-hoan-thien-chu-nghia-mac-lenin_xdkrjm.jpg",
-    connection:
-      "Ví dụ trong **Thủ tục hành chính:** Thay vì phải nộp hồ sơ giấy tờ phức tạp để thành lập doanh nghiệp, Nhà nước ban hành Nghị định cho phép đăng ký trực tuyến, giảm 80% thời gian xử lý. Đây là hoàn thiện thể chế để tăng hiệu lực và hiệu quả.",
+    pageNumber: 6,
+    chapterTitle: "Đặc trưng: Quan hệ Phân phối",
+    blocks: [
+      { type: "section-title", content: "4. Về quan hệ phân phối" },
+      {
+        type: "paragraph",
+        content:
+          "Thực hiện nhiều hình thức phân phối khác nhau, phù hợp với các yếu tố đầu vào và đầu ra của sản xuất:",
+      },
+      {
+        type: "list-item",
+        content:
+          "**Phân phối theo kết quả lao động:** Làm nhiều ăn nhiều, làm ít ăn ít (cơ sở thị trường).",
+      },
+      {
+        type: "list-item",
+        content:
+          "**Phân phối theo hiệu quả kinh tế, theo đóng góp vốn:** Dựa trên lợi tức, cổ phần (cơ sở sở hữu).",
+      },
+      {
+        type: "list-item",
+        content:
+          "**Phân phối theo phúc lợi tập thể, phúc lợi xã hội:** Quỹ hưu trí, xóa đói giảm nghèo (cơ sở XHCN).",
+      },
+      {
+        type: "connection-box",
+        title: "Ví dụ trong lĩnh vực Nhà ở",
+        content:
+          "Phân phối theo đóng góp vốn: Mua nhà thương mại. Phân phối theo phúc lợi: Được mua Nhà ở xã hội với giá ưu đãi hoặc thuê nhà công vụ (Phúc lợi xã hội do Nhà nước chi trả).",
+      },
+    ],
   },
+
+  // --- TRANG 7: Đặc trưng: Tăng trưởng & Công bằng XH ---
   {
-    page: 7,
-    title: "Hoàn thiện Thể chế: Nội dung chính ",
-    content:
-      "**Nội dung hoàn thiện thể chế tập trung vào 3 trụ cột chính:** (1) Hoàn thiện thể chế về sở hữu và các thành phần kinh tế (thể chế hóa quyền tài sản, đảm bảo bình đẳng, phát triển KT tư nhân thành động lực). (2) Hoàn thiện thể chế phát triển đồng bộ các loại thị trường (hàng hóa, vốn, lao động, khoa học-công nghệ). (3) Hoàn thiện thể chế gắn tăng trưởng với công bằng xã hội và hội nhập quốc tế (thực hiện công bằng ngay trong từng chính sách, rà soát pháp luật đáp ứng cam kết quốc tế).",
-    quote:
-      "Tạo thuận lợi để phát triển kinh tế tư nhân trở thành một động lực quan trọng của nền kinh tế.",
-    source: "Giáo trình KTCT Mác - Lênin ",
-    illustration:
-      "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771607/cover-bai-hthu-1397x786_vrwvlu.jpg",
-    connection:
-      "Ví dụ trong **Thị trường vốn:** Hoàn thiện Luật Chứng khoán và ban hành các quy định minh bạch hóa giao dịch (chống thao túng thị trường) để thu hút vốn quốc tế, phát triển đồng bộ thị trường vốn, giảm thiểu rủi ro cho nhà đầu tư (gắn với hội nhập và công bằng).",
+    pageNumber: 7,
+    chapterTitle: "Đặc trưng: Tăng trưởng và Công bằng XH",
+    blocks: [
+      {
+        type: "section-title",
+        content: "5. Về quan hệ gắn tăng trưởng kinh tế với công bằng xã hội",
+      },
+      {
+        type: "quote",
+        content:
+          "Không thể 'hy sinh' tiến bộ và công bằng xã hội để chạy theo tăng trưởng kinh tế đơn thuần.",
+        source: "Tổng Bí thư Nguyễn Phú Trọng",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Tiến bộ và công bằng xã hội phải được thực hiện **ngay trong từng chính sách, chiến lược và từng giai đoạn phát triển** để đảm bảo việc phát triển bền vững.",
+      },
+      {
+        type: "paragraph",
+        content:
+          "Điều này được biểu hiện qua các khía cạnh công bằng thu nhập như chính sách lao động việc làm, chính sách ưu đãi với người có công.",
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/dratbz8bh/image/upload/v1765771493/article_tkzsvc.jpg",
+        caption: "Công bằng xã hội vừa là mục tiêu, vừa là điều kiện để phát triển bền vững.",
+      },
+      {
+        type: "connection-box",
+        title: "Khác biệt với KTTT TBCN",
+        content:
+          "Đối với TBCN, giải quyết công bằng xã hội chỉ là mục tiêu thứ cấp để duy trì lợi ích thống trị, chỉ khi có tác động tiêu cực đến CNTB họ mới đặt ra vấn đề.",
+      },
+    ],
+  },
+
+  // --- TRANG 8: Hoàn thiện Thể chế (Khái niệm & Lý do - Phần 1) ---
+  {
+    pageNumber: 8,
+    chapterTitle: "Phần B: Hoàn thiện Thể chế KTTT ĐH XHCN",
+    blocks: [
+      {
+        type: "chapter-header",
+        content: "Phần B: Hoàn thiện Thể chế KTTT ĐH XHCN",
+      },
+      { type: "section-title", content: "I. Các khái niệm cơ bản" },
+      {
+        type: "connection-box",
+        title: "Thể chế kinh tế (TCKT)",
+        content:
+          "Hệ thống quy tắc, luật pháp, bộ máy quản lý và cơ chế vận hành nhằm điều chỉnh hành vi của các chủ thể kinh tế và các quan hệ kinh tế.",
+      },
+      {
+        type: "connection-box",
+        title: "TCKT Thị trường Định hướng XHCN",
+        content:
+          "Hệ thống đường lối, luật pháp, chính sách xác lập cơ chế vận hành, mục tiêu nhằm thúc đẩy 'dân giàu, nước mạnh, dân chủ, công bằng, văn minh'.",
+      },
+      { type: "section-title", content: "II. Lý do phải hoàn thiện thể chế" },
+      {
+        type: "paragraph",
+        content:
+          "Hoàn thiện thể chế là yêu cầu khách quan trong giai đoạn hiện nay vì hệ thống thể chế ở nước ta còn nhiều hạn chế:",
+      },
+    ],
+  },
+
+  // --- TRANG 9: Hoàn thiện Thể chế (Lý do - Phần 2) ---
+  {
+    pageNumber: 9,
+    chapterTitle: "Phần B: Hoàn thiện Thể chế KTTT ĐH XHCN",
+    blocks: [
+      {
+        type: "list-item",
+        content: "Do mới hình thành và đang phát triển nên thể chế chưa **đồng bộ**.",
+      },
+      {
+        type: "list-item",
+        content: "Hệ thống thể chế chưa **đầy đủ** (VD: các yếu tố thị trường còn sơ khai).",
+      },
+      {
+        type: "list-item",
+        content: "Hệ thống thể chế còn **kém hiệu lực** (Hiệu quả thực thi chưa cao).",
+      },
+      { type: "section-title", content: "Nội dung hoàn thiện thể chế" },
+      {
+        type: "paragraph",
+        content:
+          "Tập trung vào 3 trụ cột chính: (1) Hoàn thiện thể chế về sở hữu và TPKT; (2) Hoàn thiện thể chế phát triển đồng bộ các loại thị trường (vốn, lao động...); (3) Hoàn thiện thể chế gắn tăng trưởng với công bằng XH và hội nhập quốc tế.",
+      },
+      {
+        type: "connection-box",
+        title: "Ví dụ về Hoàn thiện Thể chế",
+        content:
+          "Thay vì phải nộp hồ sơ giấy tờ phức tạp để thành lập doanh nghiệp, Nhà nước ban hành Nghị định cho phép đăng ký trực tuyến, giảm 80% thời gian xử lý. Đây là hoàn thiện thể chế để tăng hiệu lực và hiệu quả.",
+      },
+    ],
   },
 ];

@@ -12,6 +12,7 @@ import { ProvocationSection } from "@/components/sections/ProvocationSection";
 import { IdealSection } from "@/components/sections/IdealSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { BackToTop } from "@/components/ui/back-to-top";
+import { ConceptBook } from "@/components/sections/ConceptBook";
 
 export default function Home() {
   return (
@@ -19,10 +20,14 @@ export default function Home() {
       <Navbar />
 
       {/* 1. MỞ ĐẦU: Bối cảnh chung */}
-      <div id="hero">
+      <div id="hero" className="mt-15">
         <HeroSection />
       </div>
 
+      <div id="ly-luan">
+        {/* Thay thế TheorySection bằng ConceptBook */}
+        <ConceptBook />
+      </div>
       {/* 2. ĐẶT VẤN ĐỀ: Câu hỏi lớn (Điểm nhấn mới) */}
       <ProvocationSection />
 
@@ -31,10 +36,10 @@ export default function Home() {
         <RealitySection />
       </div>
 
-      {/* 4. TIN TỨC: Tư liệu báo chí bổ trợ */}
+      {/* 4. TIN TỨC: Tư liệu báo chí bổ trợ
       <div id="tin-tuc">
         <NewsSection />
-      </div>
+      </div> */}
 
       {/* 5. LÝ LUẬN: Gốc rễ vấn đề (Tư bản vs XHCN) */}
       <div id="ly-luan">

@@ -133,10 +133,10 @@ export function SolutionSection() {
           transition={{ delay: 0.6 }}
           className="mt-20 p-8 md:p-12 bg-foreground text-white rounded-3xl relative overflow-hidden text-center shadow-2xl"
         >
-
           <div className="relative z-10 flex flex-col items-center">
             <h3 className="text-2xl md:text-3xl  font-bold mb-4 text-yellow-500">
-              Mục tiêu cuối cùng: An Cư Lạc Nghiệp
+              Mục tiêu cuối cùng: Kinh tế thị trường định hướng xã hội chủ nghĩa
+              ở Việt Nam
             </h3>
             <p className="text-slate-300 max-w-2xl text-lg mb-8">
               Khi ba công cụ này được vận hành đồng bộ, Nhà ở xã hội sẽ trở

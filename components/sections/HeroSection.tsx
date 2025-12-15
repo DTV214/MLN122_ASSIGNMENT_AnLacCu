@@ -29,12 +29,11 @@ export function HeroSection() {
           className="mb-8 text-center"
         >
           <h1 className="text-4xl md:text-5xl lg:text-6xl mb-4 text-primary  font-black tracking-tight">
-            AN CƯ LẠC NGHIỆP
+            Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
           </h1>
           {/* Đã sửa: text-muted-foreground là class chuẩn thay vì hardcode */}
           <p className="text-lg md:text-xl text-muted-foreground font-sans max-w-2xl mx-auto italic">
-            Từ lý luận Kinh tế Chính trị Mác - Lênin đến thực tiễn cơn khát nhà
-            ở tại các đô thị lớn Việt Nam 2025.
+             Kinh tế Chính trị Mác - Lênin
           </p>
         </motion.div>
 

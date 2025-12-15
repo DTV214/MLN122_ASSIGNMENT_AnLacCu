@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 
 // Font Sans (Hiện đại, dễ đọc cho nội dung chính)
 const inter = Inter({
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${merriweather.variable} font-sans antialiased bg-background text-foreground selection:bg-primary selection:text-white`}
       >
+        <ScrollProgress />
         {children}
         <Toaster position="top-center" richColors />
       </body>

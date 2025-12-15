@@ -4,6 +4,8 @@ import { REALITY_SECTION } from "@/lib/data";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import {
   TrendingUp,
   AlertTriangle,
@@ -121,7 +123,7 @@ export function RealitySection() {
                       src={
                         index === 0
                           ? "https://res.cloudinary.com/dratbz8bh/image/upload/v1762420954/xe-om-cong-nghe-anh-ngoc-duong-5-17476713220331874471141-31-0-1012-1570-crop-17476713489361966899068_bnkgqj.jpg"
-                          : "https://res.cloudinary.com/dratbz8bh/image/upload/v1762420954/xe-om-cong-nghe-anh-ngoc-duong-5-17476713220331874471141-31-0-1012-1570-crop-17476713489361966899068_bnkgqj.jpg"
+                          : "https://res.cloudinary.com/dratbz8bh/image/upload/v1765760089/xdcs.cdnchinhphu.vn-446259493575335936-2023-2-24-_chinh-sach-moi-anh-huong-den-thi-truong-bat-dong-san1602162451-16772104701281575851658-0-0-469-750-crop-1677210493773365030217_nboaoh.png"
                       }
                       alt="Minh họa"
                       fill
@@ -130,7 +132,7 @@ export function RealitySection() {
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                   </div>
                   {/* Caption giả lập ảnh in */}
-                  <div className="mt-3 text-center font-serif text-sm text-slate-500 italic">
+                  <div className="mt-3 text-center text-sm text-slate-500 italic">
                     Hình {index + 1}: {item.title}
                   </div>
                   {/* Ghim giấy (Trang trí) */}
@@ -168,7 +170,7 @@ export function RealitySection() {
                         <AlertTriangle size={20} />
                       )}
                     </div>
-                    <h3 className="text-2xl font-bold font-serif text-foreground">
+                    <h3 className="text-2xl font-bold  text-foreground">
                       {item.title}
                     </h3>
                   </div>
@@ -181,6 +183,14 @@ export function RealitySection() {
                     <p className="font-semibold text-foreground italic text-lg">
                       {item.highlight}
                     </p>
+                    {item.link && (
+                      <Link
+                        href={item.link}
+                        className="text-xs font-bold text-slate-500 hover:text-primary flex items-center gap-1 transition-colors"
+                      >
+                        Tìm hiểu khái niệm <ExternalLink size={10} />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

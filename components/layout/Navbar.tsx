@@ -14,7 +14,11 @@ import { Gamepad2, Home } from "lucide-react";
 
 export function Navbar() {
   return (
-    <div className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
+    // THAY ĐỔI Ở ĐÂY:
+    // 1. 'fixed': Cố định vị trí so với cửa sổ trình duyệt (luôn đi theo khi cuộn)
+    // 2. 'top-0': Dính chặt lên đỉnh
+    // 3. 'w-full': Chiều rộng trải dài 100% màn hình
+    <div className="border-b bg-background/95 backdrop-blur fixed top-0 w-full z-50 ">
       <div className="flex h-16 items-center px-4 md:px-10 max-w-7xl mx-auto justify-between">
         <Link
           href="/"
@@ -29,25 +33,34 @@ export function Navbar() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/#thuc-trang" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              {/* Sửa lại Link chuẩn để không bị lỗi legacyBehavior */}
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/#thuc-trang"
+                  className={navigationMenuTriggerStyle()}
+                >
                   Thực Trạng
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
-              <Link href="/#ly-luan" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink asChild>
+                <Link href="/#ly-luan" className={navigationMenuTriggerStyle()}>
                   Lý Luận
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
+
             <NavigationMenuItem>
-              <Link href="/#giai-phap" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink asChild>
+                <Link
+                  href="/#giai-phap"
+                  className={navigationMenuTriggerStyle()}
+                >
                   Giải Pháp
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

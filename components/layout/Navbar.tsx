@@ -10,7 +10,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, Home } from "lucide-react";
+import { Bot, Gamepad2, Home } from "lucide-react";
 
 export function Navbar() {
   return (
@@ -59,6 +59,13 @@ export function Navbar() {
                   className={navigationMenuTriggerStyle()}
                 >
                   Giải Pháp
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/ai-usage" className={navigationMenuTriggerStyle()}>
+                  AI Usage
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>

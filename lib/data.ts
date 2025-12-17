@@ -138,7 +138,7 @@ export const SOLUTIONS = [
   },
   {
     id: "tin-dung",
-    title: "Quỹ Nhà ở Quốc gia",
+    title: "Công cụ Lãi suất Ưu đãi",
     icon: "CreditCard",
     description:
       " Cung cấp Gói tín dụng ưu đãi (lãi suất thấp, thời gian vay dài) cho Doanh nghiệp và Người mua NOXH",
@@ -582,14 +582,6 @@ export const BOOK_PAGES: BookPage[] = [
         content:
           "Hoàn thiện thể chế là yêu cầu khách quan trong giai đoạn hiện nay vì hệ thống thể chế ở nước ta còn nhiều hạn chế:",
       },
-    ],
-  },
-
-  // --- TRANG 9: Hoàn thiện Thể chế (Lý do - Phần 2) ---
-  {
-    pageNumber: 9,
-    chapterTitle: "Phần B: Hoàn thiện Thể chế KTTT ĐH XHCN",
-    blocks: [
       {
         type: "list-item",
         content: "Do mới hình thành và đang phát triển nên thể chế chưa đồng bộ.",
@@ -601,33 +593,6 @@ export const BOOK_PAGES: BookPage[] = [
       {
         type: "list-item",
         content: "Hệ thống thể chế còn kém hiệu lực.",
-      },
-      { type: "section-title", content: "Nội dung hoàn thiện thể chế" },
-      {
-        type: "paragraph",
-        content:
-          "Tập trung vào 3 trụ cột chính: ",
-      },
-      {
-        type: "paragraph",
-        content:
-          "1. Hoàn thiện thể chế về sở hữu và TPKT.",
-      },
-      {
-        type: "paragraph",
-        content:
-          "2. Hoàn thiện thể chế phát triển đồng bộ các loại thị trường (vốn, lao động...).",
-      },
-      {
-        type: "paragraph",
-        content:
-          "3. Hoàn thiện thể chế gắn tăng trưởng với công bằng XH và hội nhập quốc tế.",
-      },
-      {
-        type: "connection-box",
-        title: "Ví dụ về Hoàn thiện Thể chế (1)",
-        content:
-          "Thay vì phải nộp hồ sơ giấy tờ phức tạp để thành lập doanh nghiệp, Nhà nước ban hành Nghị định cho phép đăng ký trực tuyến, giảm 80% thời gian xử lý. Đây là hoàn thiện thể chế để tăng hiệu lực và hiệu quả.",
       },
     ],
   },

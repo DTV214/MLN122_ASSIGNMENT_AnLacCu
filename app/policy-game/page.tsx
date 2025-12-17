@@ -22,21 +22,12 @@ import { toast } from "sonner";
 
 // --- DỮ LIỆU CÂU HỎI ÔN TẬP (GIỮ NGUYÊN) ---
 const REVIEWS = [
-    { q: "Xây dựng kinh tế thị trường định hướng XHCN ở VN nhằm mục tiêu gì?", a: ["Dân giàu, nước mạnh, dân chủ, công bằng, văn minh", "Dân giàu, nước mạnh, công bằng, dân chủ, văn minh", "Dân giàu, nước mạnh, văn minh, công bằng, dân chủ", "Dân giàu, nước mạnh, dân chủ, văn minh, công bằng"], c: 0 },
-    { q: "Công cụ quản lý vĩ mô của nhà nước trong kinh tế thị trường định hướng XHCN là?", a: ["Kế hoạch và thị trường, hệ thống pháp luật, tài chính-tiền tệ...", "Kế hoạch và thị trường, kinh tế tư nhân, quản lý tiền tệ", "Thuế, kinh tế tư nhân, kinh tế tập thể", "Hệ thống các chính sách kinh tế và xã hội"], c: 0 },
-    { q: "Đại hội nào xác định kinh tế thị trường định hướng XHCN là mô hình kinh tế tổng quát?", a: ["Đại hội VI", "Đại hội VII", "Đại hội VIII", "Đại hội IX"], c: 3 },
+    { q: "Xây dựng kinh tế thị trường định hướng XHCN ở VN nhằm mục tiêu gì?", a: ["Dân giàu, nước mạnh, dân chủ, công bằng, văn minh", "Dân giàu, nước mạnh, công bằng, dân chủ, văn hóa", "Dân giàu, nước yếu, văn minh, công bằng, dân chủ", "Dân giàu, nước mạnh, dân chủ, văn minh"], c: 0 },
     { q: "Trong nền kinh tế thị trường định hướng XHCN, thành phần nào giữ vai trò chủ đạo?", a: ["Kinh tế tập thể", "Kinh tế tư nhân", "Kinh tế nhà nước", "Kinh tế có vốn đầu tư nước ngoài"], c: 2 },
-    { q: "Kinh tế nhà nước cùng với kinh tế tập thể ngày càng trở thành?", a: ["Động lực của nền kinh tế", "Nền tảng vững chắc của nền kinh tế quốc dân", "Thành phần kinh tế quan trọng", "Nội lực của nền kinh tế"], c: 1 },
     { q: "Thành phần kinh tế nào là 'động lực quan trọng' của nền kinh tế?", a: ["Kinh tế nhà nước", "Kinh tế tập thể", "Kinh tế tư nhân", "Kinh tế có vốn đầu tư nước ngoài"], c: 2 },
-    { q: "Việc thực hiện các hình thức phân phối trong kinh tế thị trường định hướng XHCN nhằm?", a: ["Đảm bảo công bằng xã hội", "Tăng trưởng kinh tế nhanh", "Kết hợp hài hòa các lợi ích", "Thúc đẩy sản xuất"], c: 2 },
-    { q: "Sở hữu toàn dân về tư liệu sản xuất do thành phần nào đại diện?", a: ["Các hợp tác xã", "Các tập đoàn tư nhân", "Nhà nước", "Mọi người dân tự quản lý"], c: 2 },
-    { q: "Đặc trưng định hướng XHCN về phân phối là thực hiện?", a: ["Phân phối theo nhu cầu", "Phân phối bình quân", "Phân phối theo kết quả lao động, hiệu quả kinh tế và mức đóng góp", "Chỉ phân phối theo vốn góp"], c: 2 },
-    { q: "Hệ thống các quan hệ kinh tế giữa các chủ thể kinh tế trong một môi trường nhất định được gọi là?", a: ["Quy luật kinh tế", "Cơ chế kinh tế", "Thể chế kinh tế", "Mô hình kinh tế"], c: 2 },
-    { q: "Mục đích của việc hoàn thiện thể chế kinh tế thị trường định hướng XHCN là?", a: ["Xóa bỏ vai trò nhà nước", "Phát triển kinh tế tư nhân là duy nhất", "Phát triển mạnh mẽ lực lượng sản xuất, nâng cao đời sống", "Chạy theo lợi nhuận tối đa"], c: 2 },
+    { q: "Đặc trưng định hướng XHCN về phân phối là thực hiện?", a: ["Phân phối theo nhu cầu", "Phân phối bình quân", "Phân phối theo lao động và hiệu quả kinh tế, phân phối theo phúc lợi", "Chỉ phân phối theo vốn góp"], c: 2 },
     { q: "Nền kinh tế thị trường định hướng XHCN ở VN là nền kinh tế?", a: ["Có nhiều hình thức sở hữu, nhiều thành phần kinh tế", "Có một hình thức sở hữu duy nhất", "Chỉ có sở hữu tư nhân", "Hai hình thức sở hữu, hai thành phần"], c: 0 },
-    { q: "Khẳng định SAI về vai trò kinh tế nhà nước?", a: ["Là đòn bẩy tăng trưởng", "Đứng độc lập, tách rời với các thành phần khác", "Mở đường, hỗ trợ thành phần khác", "Lực lượng vật chất để điều tiết vĩ mô"], c: 1 },
-    { q: "Quy tắc, luật pháp, bộ máy quản lý và cơ chế vận hành xã hội là khái niệm về?", a: ["Thể chế", "Quy luật", "Nguyên tắc", "Quản lý"], c: 0 },
-    { q: "Hoàn thiện thể chế kinh tế thị trường xuất phát từ lý do?", a: ["Hệ thống cũ chồng chéo, chưa đồng bộ", "Để quay lại bao cấp", "Do sức ép từ bên ngoài", "Vì mục tiêu lợi nhuận của nhà nước"], c: 0 }
+    { q: "Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam có mấy đặc trưng?", a: ["Có 5 đặc trưng", "Có 4 đặc trưng", "Có 3 đặc trưng", "Có 6 đặc trưng"], c: 0 }
 ];
 
 // --- DỮ LIỆU THỬ THÁCH (GIỮ NGUYÊN) ---
@@ -131,50 +122,6 @@ const CHALLENGES = [
     },
     {
         id: 5,
-        event: "Ổn định giá gạo (2023-2024)",
-        question: "Khi giá gạo biến động, Nhà nước đã sử dụng chiến lược nào để vừa đảm bảo an ninh lương thực vừa giữ uy tín xuất khẩu?",
-        options: [
-            {
-                text: "Tăng cường thanh tra, kiểm tra và siết chặt các điều kiện dự trữ lưu thông đối với doanh nghiệp xuất khẩu.",
-                isCorrect: false,
-                feedback: "Không hiệu quả: Gây cản trở giao dịch, tạo tâm lý e ngại cho doanh nghiệp và làm giảm tính linh hoạt của thị trường quốc tế."
-            },
-            {
-                text: "Giao nhiệm vụ cho các doanh nghiệp lớn thực hiện bán gạo bình ổn giá tại các thành phố lớn.",
-                isCorrect: false,
-                feedback: "Kém hiệu quả: Quy mô triển khai nhỏ, nguồn gạo nhanh chóng thiếu hụt không đủ sức kéo giảm mặt bằng giá chung."
-            },
-            {
-                text: "Duy trì Chiến lược An ninh Lương thực tập trung vào sản lượng ổn định, chất lượng cao và cho phép xuất khẩu linh hoạt.",
-                isCorrect: true,
-                feedback: "Thành công: Đảm bảo cung cho nội địa ổn định và tận dụng được cơ hội xuất khẩu giá cao, tạo sự an tâm cho nông dân."
-            }
-        ]
-    },
-    {
-        id: 6,
-        event: "Xây dựng Nông thôn mới (từ 2010)",
-        question: "Để xây dựng nông thôn mới bền vững, trọng tâm điều hành nào sau đây mang lại kết quả kinh tế thực chất cho người dân?",
-        options: [
-            {
-                text: "Phân bổ ngân sách tập trung để đầu tư dàn trải vào các hạ tầng như nhà văn hóa, đường làng theo chỉ tiêu.",
-                isCorrect: false,
-                feedback: "Kém hiệu quả: Dẫn đến lãng phí, nợ đọng xây dựng cơ bản và nhiều công trình không được khai thác hiệu quả."
-            },
-            {
-                text: "Vận động tối đa sự đóng góp của người dân về tiền mặt, ngày công và hiến đất.",
-                isCorrect: false,
-                feedback: "Gây tranh cãi: Việc thực thi thiếu kiểm soát gây gánh nặng tài chính không đồng đều và làm mất đi sự đồng thuận của nhân dân."
-            },
-            {
-                text: "Phát triển Chương trình 'Mỗi xã một sản phẩm' (OCOP), chuyển trọng tâm sang phát triển kinh tế nội sinh.",
-                isCorrect: true,
-                feedback: "Thành công: Nâng cao giá trị sản phẩm đặc trưng, tăng thu nhập trực tiếp cho dân và xây dựng thương hiệu bền vững."
-            }
-        ]
-    },
-    {
-        id: 7,
         event: "Phục hồi kinh tế sau Covid-19 (2020-2022)",
         question: "Công cụ tài chính nào sau đây có tác động nhanh chóng và rộng rãi nhất để kích cầu tiêu dùng sau đại dịch?",
         options: [
@@ -196,7 +143,7 @@ const CHALLENGES = [
         ]
     },
     {
-        id: 8,
+        id: 6,
         event: "Khan hiếm và Đảm bảo Cung ứng Xăng dầu (2022)",
         question: "Để giải quyết dứt điểm tình trạng cửa hàng xăng dầu ngừng bán, Nhà nước cần can thiệp vào yếu tố nào?",
         options: [
@@ -218,29 +165,7 @@ const CHALLENGES = [
         ]
     },
     {
-        id: 9,
-        event: "Xây dựng đặc khu kinh tế (2018)",
-        question: "Trước những bất ổn thị trường đất đai và phản ứng xã hội về các đặc khu, hành động nào của Nhà nước được xem là thành công về điều hòa lợi ích vĩ mô?",
-        options: [
-            {
-                text: "Áp dụng các ưu đãi thuế quan đặc biệt và miễn giảm thuế thu nhập kéo dài lên đến 30 năm.",
-                isCorrect: false,
-                feedback: "Gây tranh cãi: Bị coi là dẫn đến chảy máu ngân sách và gây méo mó cạnh tranh giữa các khu vực trong nước."
-            },
-            {
-                text: "Quy định kéo dài thời hạn thuê đất tại các đặc khu lên đến 99 năm.",
-                isCorrect: false,
-                feedback: "Phản tác dụng: Gây ra cơn sốt đất nghiêm trọng, mất cân bằng lợi ích xã hội và làm méo mó thị trường bất động sản."
-            },
-            {
-                text: "Quyết định tạm dừng và rà soát lại toàn bộ cơ chế đặc khu, tạm dừng thông qua Luật liên quan.",
-                isCorrect: true,
-                feedback: "Thành công: Ngăn chặn bong bóng bất động sản lan rộng, giảm rủi ro ổn định xã hội và thất thoát đất đai."
-            }
-        ]
-    },
-    {
-        id: 10,
+        id: 7,
         event: "Khủng hoảng bong bóng chứng khoán (2007)",
         question: "Để thị trường chứng khoán phát triển bền vững sau khủng hoảng, biện pháp quản lý nào có tính chất căn cơ nhất?",
         options: [
@@ -260,32 +185,10 @@ const CHALLENGES = [
                 feedback: "Thành công: Giúp thị trường lấy lại niềm tin, điều chỉnh định giá theo giá trị thực và tạo tiền đề phát triển bền vững."
             }
         ]
-    },
-    {
-        id: 11,
-        event: "Điều hành thị trường vàng (2013)",
-        question: "Để triệt tiêu vai trò tiền tệ của vàng và ổn định kinh tế vĩ mô, Nhà nước đã thực hiện giải pháp quyết liệt nào?",
-        options: [
-            {
-                text: "Tổ chức thường xuyên các phiên đấu thầu vàng miếng SJC để tăng cung cho thị trường.",
-                isCorrect: false,
-                feedback: "Kém hiệu quả: Lượng vàng không đủ lớn và không liên tục, chỉ là giải pháp tình thế không kéo giảm bền vững chênh lệch giá."
-            },
-            {
-                text: "Cấm các tổ chức tín dụng huy động và cho vay bằng vàng đối với dân cư.",
-                isCorrect: false,
-                feedback: "Gây tranh cãi: Khiến vàng trong dân rút khỏi ngân hàng, chuyển sang tích trữ ngoại biên gây lãng phí nguồn lực xã hội."
-            },
-            {
-                text: "Nhà nước độc quyền sản xuất và quản lý kinh doanh vàng miếng SJC thông qua Nghị định 24.",
-                isCorrect: true,
-                feedback: "Thành công: Đưa thị trường vàng về một mối quản lý, loại bỏ vai trò tiền tệ của vàng trong nền kinh tế."
-            }
-        ]
     }
 ];
 
-const TOTAL_CELLS = 40;
+const TOTAL_CELLS = 24;
 const CELL_TYPES = {
     CHALLENGE: "THỬ THÁCH",
     REVIEW: "CÂU HỎI ÔN TẬP",
@@ -321,9 +224,9 @@ const PolicyGamePage = () => {
 
     const board = useMemo(() => {
         const tempBoard: string[] = [];
-        for (let i = 0; i < 11; i++) tempBoard.push(CELL_TYPES.CHALLENGE);
-        for (let i = 0; i < 15; i++) tempBoard.push(CELL_TYPES.REVIEW);
-        for (let i = 0; i < 7; i++) tempBoard.push(CELL_TYPES.LUCKY);
+        for (let i = 0; i < 7; i++) tempBoard.push(CELL_TYPES.CHALLENGE);
+        for (let i = 0; i < 6; i++) tempBoard.push(CELL_TYPES.REVIEW);
+        for (let i = 0; i < 4; i++) tempBoard.push(CELL_TYPES.LUCKY);
         for (let i = 0; i < 7; i++) tempBoard.push(CELL_TYPES.PENALTY);
         return tempBoard.sort(() => Math.random() - 0.5);
     }, [gameState === "intro"]);

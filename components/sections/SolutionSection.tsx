@@ -56,11 +56,11 @@ export function SolutionSection() {
             Phần III: Giải Pháp Vĩ Mô
           </Badge>
           <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">
-            Kiềng Ba Chân Vững Chắc
+            Chi Tiết Công Cụ Kinh tế Điều Hoà Lợi Ích
           </h2>
           <div className="w-32 h-2 bg-primary mx-auto rounded-full mb-6" />
           <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
-            Để biến giấc mơ AN CƯ thành hiện thực, Nhà nước cần sử dụng đồng bộ
+            Nhà nước cần sử dụng đồng bộ
             <span className="font-bold text-foreground">
               {" "}
               3 công cụ điều tiết{" "}

@@ -49,17 +49,16 @@ export function IdealSection() {
           <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
             <Quote className="w-12 h-12 text-yellow-400 mb-4 opacity-80" />
             <p className="text-2xl italic text-white leading-relaxed text-center">
-              An cư lạc nghiệp là nền tảng của sự ổn định xã hội và hạnh phúc
-              nhân dân.
+              Phát triển kinh tế phải gắn liền và phục vụ cho mục tiêu Công bằng xã hội. Đó là động lực bền vững nhất.
             </p>
-            <div className="mt-6 text-center">
+            {/* <div className="mt-6 text-center">
               <span className="block font-bold text-yellow-400 uppercase tracking-widest text-sm">
                 Mục tiêu 2030
               </span>
               <span className="text-white/80 text-sm">
                 Hoàn thành 1 triệu căn nhà ở xã hội
               </span>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>

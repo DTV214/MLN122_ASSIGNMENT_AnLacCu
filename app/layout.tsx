@@ -20,7 +20,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "An Cư Lạc Nghiệp | MLN122 Project",
+  title: "Kinh tế | MLN122 Project",
   description: "Phân tích thị trường Bất động sản dưới góc nhìn KTCT Mác-Lênin",
 };
 
